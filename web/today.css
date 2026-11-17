@@ -1,0 +1,19 @@
+#today .page-heading h1 { text-wrap: balance; }
+#today-subtitle { font-size: 13.5px; }
+.today-log { min-height: 30px; padding: 0 10px; font-size: 12px; }
+.today-log svg { width: 14px; height: 14px; }
+.notes-task-check[data-done] { border-color: var(--success); background: var(--success); }
+#today .crm-birthday-row .crm-date-block { width: 36px; height: 38px; }
+#today .crm-birthday-row .crm-date-block strong { font-size: 14px; }
+#today .crm-birthday-row .crm-avatar, #today .crm-birthday-row .crm-person small { display: none; }
+#today .crm-birthday-row .crm-queue-when { margin-left: auto; text-transform: capitalize; }
+#today .crm-birthday-row .crm-person { flex: 1 1 auto; }
+.today-links { display: flex; flex-wrap: wrap; gap: 8px; padding: 14px 16px; }
+.today-link { display: inline-flex; align-items: center; gap: 7px; max-width: 100%; padding: 7px 11px; border: 1px solid var(--line); border-radius: 9px; background: var(--chrome); color: var(--text); font-size: 12.5px; font-weight: 600; transition: border-color .15s; }
+.today-link:hover { border-color: var(--edge); }
+.today-link svg { flex: none; width: 15px; height: 15px; color: var(--muted); }
+.today-link span { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.today-diary { display: grid; gap: 12px; padding: 14px 16px 16px; }
+.today-diary p { color: var(--muted); font-size: 12.5px; line-height: 1.5; }
+.today-diary .button { justify-self: start; min-height: 30px; font-size: 12px; }
+.today-diary .button svg { width: 14px; height: 14px; }

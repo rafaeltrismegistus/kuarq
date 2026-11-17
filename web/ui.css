@@ -1,0 +1,116 @@
+/* ---------- Dropdown (replaces native selects) ---------- */
+.kit-select { position: relative; display: block; min-width: 0; }
+.kit-select > select { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; pointer-events: none; }
+.kit-select-button {
+  display: flex; align-items: center; gap: 8px; width: 100%; min-height: 38px; padding: 0 10px 0 11px;
+  border: 1px solid var(--line); border-radius: 8px; background: var(--chrome); color: var(--text);
+  font: inherit; font-size: 13px; font-weight: 500; text-align: left; transition: border-color .15s, background-color .15s;
+}
+.kit-select-button:hover:not(:disabled) { border-color: var(--edge); }
+.kit-select-button[aria-expanded="true"] { border-color: var(--edge); outline: 2px solid var(--focus); outline-offset: 1px; }
+.kit-select-button:disabled { opacity: .5; cursor: default; }
+.kit-select-value { flex: 1; min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.kit-select-button svg { flex: none; width: 15px; height: 15px; color: var(--muted); transition: transform .15s; }
+.kit-select-button[aria-expanded="true"] svg { transform: rotate(180deg); }
+.kit-select-menu {
+  position: fixed; z-index: 60; display: grid; gap: 1px; max-height: min(320px, 60vh); max-width: min(360px, calc(100vw - 16px));
+  overflow-y: auto; padding: 5px; border: 1px solid var(--line); border-radius: 10px; background: var(--raised); box-shadow: var(--shadow-lg);
+  animation: note-pop .12s ease-out;
+}
+.kit-select-option {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px; width: 100%; min-height: 34px; padding: 0 10px;
+  border: 0; border-radius: 7px; background: transparent; color: var(--text); font: inherit; font-size: 13px; text-align: left;
+}
+.kit-select-option:hover:not(:disabled), .kit-select-option:focus-visible { background: var(--hover); outline: none; }
+.kit-select-option[aria-selected="true"] { background: var(--soft); font-weight: 600; }
+.kit-select-option:disabled { opacity: .4; cursor: default; }
+.kit-select-option svg { flex: none; width: 14px; height: 14px; color: var(--accent); opacity: 0; }
+.kit-select-option[aria-selected="true"] svg { opacity: 1; }
+.kit-select-option span { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+/* Compact variant inside toolbars */
+.module-select .kit-select-button, .crm-tools-left .kit-select-button { min-height: 30px; border: 0; padding: 0 4px; background: transparent; }
+.module-select .kit-select { flex: 1; }
+#crm-calendar .kit-select-button { min-height: 34px; }
+/* Fields never overflow their column */
+.kit-field, .drawer-fields { grid-template-columns: minmax(0, 1fr); }
+.kit-field > *, .drawer-fields > *, .crm-fields-pair > * { min-width: 0; }
+.kit-date-popover { z-index: 70; }
+.crm-fields-pair { align-items: start; }
+/* Labels stay at the top of each field, whatever the neighbour's height */
+.kit-field { align-content: start; }
+.kit-hint { margin: -4px 0 0; color: var(--subtle); font-size: 12px; line-height: 1.4; }
+.kit-suggest-menu .kit-select-option svg { display: none; }
+input[data-combo] { cursor: text; }
+.module-tools-left { flex: 1 1 auto; } .module-select { flex: none; max-width: 260px; }
+.nu-kind input, .crm-channels input, .kit-swatches input { width: 1px !important; height: 1px !important; padding: 0 !important; }
+
+/* ---------- Floating menu (kit.menu) ---------- */
+.kit-menu { position: fixed; z-index: 1000; min-width: 200px; max-width: 300px; }
+.kit-menu-item { display: flex; align-items: center; gap: 9px; }
+.kit-menu-item > svg:first-child { flex: none; width: 15px; height: 15px; color: var(--muted); }
+.kit-menu-item > span { flex: 1; min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.kit-menu-item > small { color: var(--subtle); font-size: 11px; }
+.kit-menu-item.danger, .kit-menu-item.danger > svg:first-child { color: var(--danger); }
+.kit-menu-item:disabled { opacity: .45; }
+.kit-menu-dot { flex: none; width: 9px; height: 9px; border-radius: 50%; background: var(--stage-color, var(--muted)); }
+.kit-menu-sep { display: block; height: 1px; margin: 4px 2px; background: var(--line); }
+.kit-menu-heading { display: block; padding: 6px 10px 3px; color: var(--subtle); font-size: 10.5px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; }
+
+/* ---------- (i) help ---------- */
+.kit-help { position: relative; display: inline-grid; place-items: center; width: 18px; height: 18px; margin-left: 6px; border-radius: 50%; color: var(--subtle); vertical-align: middle; cursor: help; outline: none; }
+.kit-help > svg { width: 15px; height: 15px; }
+.kit-help:hover, .kit-help:focus-visible { color: var(--text); }
+.kit-help-tip { position: absolute; z-index: 50; top: calc(100% + 6px); left: 50%; width: max-content; max-width: 260px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--panel); box-shadow: var(--shadow-md); color: var(--text); font-size: 12px; font-weight: 500; line-height: 1.45; letter-spacing: 0; text-transform: none; white-space: normal; transform: translateX(-50%); opacity: 0; visibility: hidden; transition: opacity .12s; pointer-events: none; }
+.kit-help:hover .kit-help-tip, .kit-help:focus-visible .kit-help-tip { opacity: 1; visibility: visible; }
+.dialog-header .kit-help-tip { left: 0; transform: none; }
+
+.split-button { display: inline-flex; }
+.split-button > .button:first-child { border-top-right-radius: 0; border-bottom-right-radius: 0; }
+.split-caret { min-width: 0; padding: 0 9px !important; border-top-left-radius: 0 !important; border-bottom-left-radius: 0 !important; border-left: 1px solid color-mix(in srgb, var(--on-primary) 22%, transparent) !important; }
+.split-caret svg { width: 14px; height: 14px; }
+
+.kit-menu-searchable { min-width: 280px; }
+.kit-menu-search { position: sticky; top: -5px; z-index: 1; height: 32px; margin: -5px -5px 4px; padding: 0 12px; border: 0; border-bottom: 1px solid var(--line); border-radius: 10px 10px 0 0; background: var(--raised); color: var(--text); font: inherit; font-size: 13px; outline: none; }
+.kit-menu-item[hidden], .kit-menu-heading[hidden], .kit-menu-sep[hidden] { display: none; }
+.kit-menu-empty { padding: 8px 10px; color: var(--subtle); font-size: 12.5px; }
+.kit-menu-empty[hidden] { display: none; }
+
+/* ---------- Quick links ---------- */
+.kit-ql { display: grid; grid-template-columns: repeat(auto-fill, minmax(78px, 1fr)); gap: 6px; }
+.kit-ql-tile { display: grid; justify-items: center; align-content: center; gap: 6px; min-width: 0; min-height: 70px; padding: 10px 4px 8px; border: 1px solid var(--line); border-radius: 9px; background: var(--chrome); color: var(--text); font: inherit; font-size: 12px; font-weight: 550; text-align: center; cursor: pointer; }
+.kit-ql-tile svg { width: 19px; height: 19px; color: var(--muted); }
+.kit-ql-tile span { max-width: 100%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.kit-ql-tile:hover { border-color: var(--edge); }
+.kit-ql-tile:hover svg { color: var(--text); }
+.kit-ql-tile.add { border-style: dashed; background: transparent; color: var(--subtle); font-weight: 500; }
+.kit-ql-tile.add svg { color: var(--subtle); opacity: .7; }
+.kit-ql-tile.add:hover { color: var(--text); }
+.kit-ql-edit svg { width: 13px; height: 13px; }
+.kit-ql-owner { margin: 0 0 4px; color: var(--muted); font-size: 13px; }
+.kit-ql-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
+.kit-ql-fields label { display: grid; gap: 5px; }
+.kit-ql-fields label > span { display: inline-flex; align-items: center; gap: 6px; }
+.kit-ql-fields label > span svg { width: 14px; height: 14px; color: var(--muted); }
+.kit-ql-extras { display: grid; gap: 8px; margin-top: 6px; padding-top: 12px; border-top: 1px solid var(--line); }
+.kit-ql-extras-title { font-weight: 650; font-size: 13px; }
+.kit-ql-extra-list { display: grid; gap: 6px; }
+.kit-ql-extra-list:empty { display: none; }
+.kit-ql-extra { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr) 34px; gap: 6px; align-items: center; }
+.kit-ql-extras .crm-link { justify-self: start; }
+@media (max-width: 560px) { .kit-ql-fields { grid-template-columns: 1fr; } }
+
+/* ---------- Image field (logo / photo) ---------- */
+.kit-image { display: flex; align-items: center; gap: 14px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--chrome); }
+.kit-image-preview { flex: none; display: grid; place-items: center; width: 56px; height: 56px; overflow: hidden; border: 1px dashed var(--edge); border-radius: 12px; background: var(--panel); color: var(--subtle); }
+.kit-image[data-shape="round"] .kit-image-preview { border-radius: 50%; }
+.kit-image-preview:has(img) { border-style: solid; border-color: var(--line); background: #fff; }
+.kit-image-preview svg { width: 22px; height: 22px; }
+.kit-image-preview img { width: 100%; height: 100%; object-fit: contain; }
+.kit-image[data-fit="cover"] .kit-image-preview img { object-fit: cover; }
+.kit-image-text { display: grid; gap: 3px; min-width: 0; }
+.kit-image-text strong { font-size: 12px; font-weight: 600; }
+.kit-image-text small { color: var(--muted); font-size: 11.5px; font-weight: 400; }
+.kit-image-actions { display: flex; align-items: center; gap: 10px; margin-top: 4px; }
+.kit-image-actions .button { min-height: 28px; padding: 0 10px; font-size: 12px; }
+.kit-image-actions .button svg { width: 14px; height: 14px; }
+.kit-project-logo { flex: none; width: 14px; height: 14px; border-radius: 3px; object-fit: contain; background: #fff; }

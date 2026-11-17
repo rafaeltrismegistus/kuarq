@@ -1,0 +1,68 @@
+<Window x:Class="Kuarq.Desktop.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:shell="clr-namespace:System.Windows.Shell;assembly=PresentationFramework"
+        xmlns:wv="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
+        Title="Kuarq" Icon="kuarq.ico" Width="1270" Height="850" MinWidth="480" MinHeight="520"
+        WindowStyle="None" ResizeMode="CanResize"
+        WindowStartupLocation="CenterScreen" SourceInitialized="OnSourceInitialized"
+        Loaded="OnLoaded" Closing="OnClosing" Closed="OnClosed">
+    <shell:WindowChrome.WindowChrome>
+        <shell:WindowChrome CaptionHeight="43" ResizeBorderThickness="6" GlassFrameThickness="0"
+                            CornerRadius="12" UseAeroCaptionButtons="False" />
+    </shell:WindowChrome.WindowChrome>
+    <Window.Resources>
+        <Style x:Key="WindowButton" TargetType="Button">
+            <Setter Property="Width" Value="23" />
+            <Setter Property="Height" Value="28" />
+            <Setter Property="Foreground" Value="#4A2525" />
+            <Setter Property="shell:WindowChrome.IsHitTestVisibleInChrome" Value="True" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Grid Background="Transparent">
+                            <Ellipse x:Name="Dot" Width="13" Height="13" Fill="{TemplateBinding Background}" />
+                            <ContentPresenter x:Name="Glyph" HorizontalAlignment="Center"
+                                              VerticalAlignment="Center" Opacity="0" />
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Glyph" Property="Opacity" Value="1" />
+                            </Trigger>
+                            <Trigger Property="IsKeyboardFocused" Value="True">
+                                <Setter TargetName="Glyph" Property="Opacity" Value="1" />
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="Dot" Property="Opacity" Value=".7" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+    <Grid x:Name="WindowSurface" Background="#F8F7F4">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="43" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Border x:Name="TitleBar" Background="#F0EEEB" BorderBrush="#DEDAD7" BorderThickness="0,0,0,1">
+            <Grid>
+                <StackPanel Orientation="Horizontal" Margin="0,0,12,0"
+                            HorizontalAlignment="Right" VerticalAlignment="Center">
+                    <Button Style="{StaticResource WindowButton}" Background="#FFBD45" Content="−"
+                            ToolTip="Minimizar" AutomationProperties.Name="Minimizar" Click="OnMinimizeClick" />
+                    <Button Style="{StaticResource WindowButton}" Background="#35CB62" Content="+"
+                            ToolTip="Maximizar ou restaurar" AutomationProperties.Name="Maximizar ou restaurar"
+                            Click="OnResizeClick" />
+                    <Button Style="{StaticResource WindowButton}" Background="#FF625B" Content="×"
+                            ToolTip="Fechar" AutomationProperties.Name="Fechar" Click="OnCloseClick" />
+                </StackPanel>
+                <TextBlock x:Name="WindowTitle" Text="Kuarq" HorizontalAlignment="Center" VerticalAlignment="Center"
+                           Foreground="#403B44" FontSize="13" FontWeight="SemiBold" />
+            </Grid>
+        </Border>
+        <TextBlock Grid.Row="1" x:Name="Status" Margin="24" TextWrapping="Wrap" Text="Abrindo o Kuarq…" />
+        <wv:WebView2 Grid.Row="1" x:Name="WorkspaceView" Visibility="Collapsed" AllowDrop="False" />
+    </Grid>
+</Window>

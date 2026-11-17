@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; base-uri 'none'; form-action 'none'">
+  <title>Kuarq</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="icon" href="favicon.ico" sizes="any">
+  <link rel="stylesheet" href="toolkit.css">
+  <link rel="stylesheet" href="crm.css">
+  <link rel="stylesheet" href="notes.css">
+  <link rel="stylesheet" href="today.css">
+  <link rel="stylesheet" href="modules.css">
+  <link rel="stylesheet" href="ui.css">
+  <link rel="stylesheet" href="palette.css">
+  <link rel="stylesheet" href="backups.css">
+  <script src="rich-text.js" defer></script>
+  <script src="toolkit.js" defer></script>
+  <script src="ui.js" defer></script>
+  <script src="crm.js" defer></script>
+  <script src="notes.js" defer></script>
+  <script src="kit.js" defer></script>
+  <script src="projects.js" defer></script>
+  <script src="tasks.js" defer></script>
+  <script src="processes.js" defer></script>
+  <script src="workhome.js" defer></script>
+  <script src="links.js" defer></script>
+  <script src="journal.js" defer></script>
+  <script src="nucleus.js" defer></script>
+  <script src="dreams.js" defer></script>
+  <script src="today.js" defer></script>
+  <script src="palette.js" defer></script>
+  <script src="backups.js" defer></script>
+</head>
+<body>
+  <a class="skip" href="#main">Ir para o conteúdo</a>
+  <div class="shell">
+    <aside class="sidebar" id="sidebar">
+      <div class="brand-row">
+        <button class="brand" type="button" data-action="today" aria-label="Kuarq, início"><span class="brand-mark"><img class="brand-logo brand-logo-dark" src="kuarq-logo-dark.svg" alt="" draggable="false"><img class="brand-logo brand-logo-light" src="kuarq-logo-light.svg" alt="" draggable="false"></span><strong>Kuarq</strong></button>
+        <button class="icon-button sidebar-toggle" type="button" data-action="sidebar" title="Recolher menu" aria-label="Recolher menu" aria-controls="sidebar" aria-expanded="true" data-icon="sidebar"></button>
+      </div>
+      <nav class="tool-navigation" aria-label="Ferramentas">
+        <button class="nav-tool" type="button" data-action="today" title="Hoje" aria-label="Hoje" disabled><span data-icon="home"></span><span>Hoje</span></button>
+        <button class="nav-tool" type="button" data-action="work" title="Trabalho" aria-label="Trabalho" disabled><span data-icon="checklist"></span><span>Trabalho</span></button>
+        <button class="nav-tool" type="button" data-action="crm" title="Networking" aria-label="Networking" disabled><span data-icon="people"></span><span>Networking</span></button>
+        <button class="nav-tool" type="button" data-action="shelf" title="Toolkit" aria-label="Toolkit" disabled><span data-icon="grid"></span><span>Toolkit</span></button>
+        <button class="nav-tool" type="button" data-action="nucleus" title="Núcleo" aria-label="Núcleo" disabled><span data-icon="atom"></span><span>Núcleo</span></button>
+      </nav>
+      <button type="button" id="backups-open" class="sidebar-footer" title="Backups e restauração"><span data-icon="drive"></span><span>Backups</span></button>
+    </aside>
+    <div class="workspace">
+      <header class="topbar">
+        <nav class="breadcrumbs" aria-label="Localização"><button id="tool-crumb" type="button" data-action="library">Mapas mentais</button><span id="current-crumb" hidden></span></nav>
+        <div class="topbar-actions">
+          <button id="palette-open" class="palette-trigger" type="button" aria-keyshortcuts="Control+K" title="Buscar ou executar (Ctrl+K)"><span data-icon="search"></span><span>Buscar ou executar…</span><kbd>Ctrl K</kbd></button>
+          <button id="save-status" type="button" data-action="retry" aria-live="polite" disabled>Carregando…</button>
+          <button id="discreet-toggle" class="icon-button" type="button" data-action="discreet" title="Modo discreto: esconde o Núcleo e os valores" aria-label="Modo discreto" aria-pressed="false" data-icon="eye"></button>
+          <button id="reload-toolkit" class="icon-button" type="button" data-action="reload" title="Recarregar Kuarq (F5)" aria-label="Recarregar Kuarq" aria-keyshortcuts="F5" data-icon="reload"></button>
+          <button id="theme-toggle" class="icon-button" type="button" data-action="theme" title="Alternar tema" aria-label="Alternar tema" aria-pressed="false" data-icon="moon"></button>
+        </div>
+      </header>
+      <main id="main" tabindex="-1">
+        <section id="today" data-module hidden aria-labelledby="today-title">
+          <header class="page-heading">
+            <div><h1 id="today-title">Hoje</h1><p id="today-subtitle"></p></div>
+            <div class="page-actions">
+              <button class="button" type="button" data-crm="new"><span data-icon="people"></span>Novo contato</button>
+              <button class="button primary" type="button" data-today="new-note"><span data-icon="plus"></span>Nova nota</button>
+            </div>
+          </header>
+          <div id="today-content"></div>
+        </section>
+        <section id="projects" data-module hidden aria-labelledby="projects-title">
+          <header class="page-heading">
+            <div><h1 id="projects-title">Projetos</h1><p>Agrupe tarefas, notas, contatos, mapas e links por projeto.</p></div>
+            <div class="page-actions"><button class="button primary" type="button" data-module-action="projects:new"><span data-icon="plus"></span>Novo projeto</button></div>
+          </header>
+          <div id="projects-content"></div>
+        </section>
+        <section id="workhome" data-module hidden aria-labelledby="workhome-title">
+          <header class="page-heading">
+            <div><h1 id="workhome-title">Visão geral</h1><p>O que precisa de atenção no trabalho.</p></div>
+            <div class="page-actions"><div class="split-button"><button class="button primary" type="button" data-module-action="tasks:new"><span data-icon="plus"></span>Nova tarefa</button><button class="button primary split-caret" type="button" data-module-action="tasks:new-menu" aria-label="Mais opções de criação" aria-haspopup="menu"><span data-icon="chevron"></span></button></div></div>
+          </header>
+          <div id="workhome-content"></div>
+        </section>
+        <section id="tasks" data-module hidden aria-labelledby="tasks-title">
+          <header class="page-heading">
+            <div><h1 id="tasks-title">Tarefas</h1><p>Organize o que precisa ser feito e acompanhe o andamento.</p></div>
+            <div class="page-actions"><div class="split-button"><button class="button primary" type="button" data-module-action="tasks:new"><span data-icon="plus"></span>Nova tarefa</button><button class="button primary split-caret" type="button" data-module-action="tasks:new-menu" aria-label="Mais opções de criação" aria-haspopup="menu"><span data-icon="chevron"></span></button></div></div>
+          </header>
+          <div id="tasks-content"></div>
+        </section>
+        <section id="processes" data-module hidden aria-labelledby="processes-title">
+          <header class="page-heading">
+            <div><h1 id="processes-title">Processos</h1><p>Sequências de tarefas e modelos reutilizáveis.</p></div>
+          </header>
+          <div id="processes-content"></div>
+        </section>
+        <section id="dreams" data-module hidden aria-labelledby="dreams-title">
+          <header class="page-heading">
+            <div><h1 id="dreams-title">Quadro dos sonhos</h1><p>O que você quer viver e conquistar.</p></div>
+            <div class="page-actions"><button class="button primary" type="button" data-module-action="dreams:new"><span data-icon="plus"></span>Novo sonho</button></div>
+          </header>
+          <div id="dreams-content"></div>
+        </section>
+        <section id="journal" data-module hidden aria-labelledby="journal-title">
+          <header class="page-heading">
+            <div><h1 id="journal-title">Diário</h1><p>Registre o dia de trabalho. O Kuarq junta o que aconteceu automaticamente.</p></div>
+            <div class="page-actions"><button class="button" type="button" data-module-action="journal:today"><span data-icon="calendar"></span>Ir para hoje</button></div>
+          </header>
+          <div id="journal-content"></div>
+        </section>
+        <section id="links" data-module hidden aria-labelledby="links-title">
+          <header class="page-heading">
+            <div><h1 id="links-title">Links</h1><p>Sites, pastas e arquivos que você usa todo dia, a um clique.</p></div>
+            <div class="page-actions"><button class="button primary" type="button" data-module-action="links:new"><span data-icon="plus"></span>Novo link</button></div>
+          </header>
+          <div id="links-content"></div>
+        </section>
+        <section id="nucleus" data-module hidden aria-labelledby="nucleus-title">
+          <header class="page-heading">
+            <div><h1 id="nucleus-title">Núcleo</h1><p>Seu dinheiro: contas, cartões, investimentos e compras.</p></div>
+            <div class="page-actions"><button class="button" type="button" data-module-action="nucleus:add" aria-haspopup="menu"><span data-icon="plus"></span>Adicionar<span data-icon="chevron"></span></button><button class="button primary" type="button" data-module-action="nucleus:entry"><span data-icon="plus"></span>Lançar</button></div>
+          </header>
+          <div id="nucleus-content"></div>
+        </section>
+        <section id="library" hidden>
+          <header class="page-heading">
+            <div><h1>Mapas mentais</h1><p>Organize ideias em mapas e acompanhe as conexões entre elas.</p></div>
+            <button class="button primary" type="button" data-action="new-map" disabled><span data-icon="plus"></span>Novo mapa</button>
+          </header>
+          <div id="map-library"></div>
+        </section>
+        <section id="editor" hidden aria-label="Editor de mapa mental">
+          <header class="editor-heading">
+            <button type="button" class="icon-button" data-action="library" aria-label="Voltar à biblioteca" title="Voltar à biblioteca" data-icon="back"></button>
+            <input id="map-title" aria-label="Título do mapa" maxlength="80" spellcheck="true">
+            <button type="button" id="link-note-button" class="button editing-only map-link-note" data-action="link-note-dialog" aria-label="Vincular nota ao card"><span data-icon="note"></span><span>Vincular nota</span></button>
+            <div class="toolbar-group editing-only">
+              <button type="button" class="icon-button" data-action="undo" title="Desfazer (Ctrl+Z)" aria-label="Desfazer" data-icon="undo" disabled></button>
+              <button type="button" class="icon-button" data-action="fit" title="Enquadrar mapa" aria-label="Enquadrar mapa" data-icon="fit"></button>
+            </div>
+            <div class="toolbar-group" aria-label="Zoom">
+              <button type="button" class="icon-button" data-action="zoom-out" title="Diminuir zoom" aria-label="Diminuir zoom" data-icon="minus"></button>
+              <button type="button" class="zoom-value" data-action="fit" title="Enquadrar mapa" aria-label="Redefinir zoom para enquadrar mapa">100%</button>
+              <button type="button" class="icon-button" data-action="zoom-in" title="Aumentar zoom" aria-label="Aumentar zoom" data-icon="plus"></button>
+            </div>
+            <button id="presentation-toggle" type="button" class="button primary" data-action="present" aria-pressed="false"><span data-icon="play"></span><span>Apresentar</span></button>
+          </header>
+          <div id="map-viewport" tabindex="0" aria-label="Canvas do mapa mental">
+            <canvas id="connections" aria-hidden="true"></canvas>
+            <div id="nodes"></div>
+            <canvas id="ink" aria-hidden="true"></canvas>
+            <div class="map-overlay ink-toolbar" role="toolbar" aria-label="Ferramentas do quadro" aria-orientation="vertical">
+              <button type="button" class="ink-tool" data-action="ink-tool" data-ink-tool="select" title="Selecionar e mover (V)" aria-label="Selecionar e mover" data-icon="cursor"></button>
+              <button type="button" class="ink-tool" data-action="ink-tool" data-ink-tool="pen" title="Caneta (P)" aria-label="Caneta" data-icon="pen"></button>
+              <button type="button" class="ink-tool" data-action="ink-tool" data-ink-tool="marker" title="Marcador (M)" aria-label="Marcador" data-icon="marker"></button>
+              <button type="button" class="ink-tool" data-action="ink-tool" data-ink-tool="eraser" title="Borracha (E)" aria-label="Borracha" data-icon="eraser"></button>
+              <div id="ink-options" class="ink-options" hidden>
+                <span class="ink-sep" aria-hidden="true"></span>
+                <button type="button" class="ink-swatch" data-action="ink-color" data-ink-color="auto" title="Cor do texto" aria-label="Cor do texto"><i></i></button>
+                <button type="button" class="ink-swatch" data-action="ink-color" data-ink-color="red" title="Vermelho" aria-label="Vermelho"><i></i></button>
+                <button type="button" class="ink-swatch" data-action="ink-color" data-ink-color="blue" title="Azul" aria-label="Azul"><i></i></button>
+                <button type="button" class="ink-swatch" data-action="ink-color" data-ink-color="green" title="Verde" aria-label="Verde"><i></i></button>
+                <button type="button" class="ink-swatch" data-action="ink-color" data-ink-color="yellow" title="Amarelo" aria-label="Amarelo"><i></i></button>
+                <button type="button" class="ink-swatch" data-action="ink-color" data-ink-color="purple" title="Roxo" aria-label="Roxo"><i></i></button>
+                <span class="ink-sep" aria-hidden="true"></span>
+                <button type="button" class="ink-size" data-action="ink-size" data-ink-size="" data-step="1" title="Traço fino" aria-label="Traço fino"><i></i></button>
+                <button type="button" class="ink-size" data-action="ink-size" data-ink-size="" data-step="2" title="Traço médio" aria-label="Traço médio"><i></i></button>
+                <button type="button" class="ink-size" data-action="ink-size" data-ink-size="" data-step="3" title="Traço grosso" aria-label="Traço grosso"><i></i></button>
+              </div>
+              <span class="ink-sep editing-only" aria-hidden="true"></span>
+              <button type="button" id="copy-node-tool" class="ink-tool editing-only" data-action="copy-node" title="Copiar card (Ctrl+C)" aria-label="Copiar card" data-icon="copy"></button>
+              <button type="button" id="paste-node-tool" class="ink-tool editing-only" data-action="paste-node" title="Colar card (Ctrl+V)" aria-label="Colar card" data-icon="clipboard" disabled></button>
+              <button type="button" id="fix-node-tool" class="ink-tool editing-only" data-action="fix-node" title="Fixar card selecionado" aria-label="Fixar card selecionado" aria-pressed="false" data-icon="unlock"></button>
+              <button type="button" id="delete-node-tool" class="ink-tool editing-only" data-action="delete-node" title="Excluir card selecionado (Delete)" aria-label="Excluir card selecionado" data-icon="trash"></button>
+            </div>
+            <div id="link-toolbar" class="map-overlay link-toolbar" role="toolbar" aria-label="Seta selecionada" hidden>
+              <span class="link-shapes" role="group" aria-label="Formato da seta">
+                <button type="button" data-action="link-shape" data-shape="straight" title="Reta" aria-label="Seta reta" aria-pressed="true" data-icon="arrow-straight"></button>
+                <button type="button" data-action="link-shape" data-shape="wave" title="Wave: curva arredondada" aria-label="Seta Wave, arredondada" aria-pressed="false" data-icon="wave"></button>
+                <button type="button" data-action="link-shape" data-shape="hold" title="Hold: cantos retos, como organograma" aria-label="Seta Hold, com cantos retos" aria-pressed="false" data-icon="elbow"></button>
+              </span>
+              <span class="link-toolbar-sep" aria-hidden="true"></span>
+              <button type="button" data-action="link-reverse" title="Inverter direção" aria-label="Inverter direção da seta" data-icon="swap"></button>
+              <button type="button" data-action="link-delete" title="Excluir seta (Delete)" aria-label="Excluir seta" data-icon="trash"></button>
+            </div>
+            <div id="connect-menu" class="map-overlay connect-menu" role="menu" aria-label="Escolher tipo de conexão" hidden>
+              <span class="connect-menu-label">Criar conexão:</span>
+              <button type="button" class="connect-option" role="menuitem" data-action="connect-choice" data-kind="branch">
+                <i class="legend-branch" aria-hidden="true"></i>
+                <span>Ramo <small>recolhível</small></span>
+              </button>
+              <button type="button" class="connect-option" role="menuitem" data-action="connect-choice" data-kind="link">
+                <i class="legend-link" aria-hidden="true"></i>
+                <span>Seta <small>conexão livre</small></span>
+              </button>
+              <button type="button" class="connect-close" data-action="connect-cancel" title="Cancelar" aria-label="Cancelar" data-icon="close"></button>
+            </div>
+            <div id="card-style-bar" class="map-overlay card-style-bar editing-only" role="toolbar" aria-label="Cor do bloco" hidden>
+              <span class="style-bar-label">Bloco</span>
+              <button type="button" class="card-swatch" data-action="card-color" data-card-color="default" title="Padrão" aria-label="Cor padrão"><i></i></button>
+              <button type="button" class="card-swatch" data-action="card-color" data-card-color="slate" title="Cinza" aria-label="Card cinza"><i></i></button>
+              <button type="button" class="card-swatch" data-action="card-color" data-card-color="purple" title="Roxo" aria-label="Card roxo"><i></i></button>
+              <button type="button" class="card-swatch" data-action="card-color" data-card-color="blue" title="Azul" aria-label="Card azul"><i></i></button>
+              <button type="button" class="card-swatch" data-action="card-color" data-card-color="green" title="Verde" aria-label="Card verde"><i></i></button>
+              <button type="button" class="card-swatch" data-action="card-color" data-card-color="amber" title="Amarelo" aria-label="Card amarelo"><i></i></button>
+              <button type="button" class="card-swatch" data-action="card-color" data-card-color="red" title="Vermelho" aria-label="Card vermelho"><i></i></button>
+              <button type="button" class="card-swatch" data-action="card-color" data-card-color="dark" title="Escuro" aria-label="Card escuro"><i></i></button>
+              <span class="bubble-sep" aria-hidden="true"></span>
+              <button type="button" class="card-style-action" data-action="card-image" title="Colocar uma imagem no card (ou cole com Ctrl+V)" aria-label="Imagem do card"><span data-icon="image"></span></button>
+              <button type="button" class="card-style-action" data-action="card-image-remove" title="Remover a imagem" aria-label="Remover a imagem" hidden><span data-icon="trash"></span></button>
+            </div>
+            <div id="text-bubble" class="map-overlay note-bubble card-text-bubble editing-only" role="toolbar" aria-label="Formatação do texto selecionado" hidden>
+              <button type="button" data-card-inline="bold" aria-label="Negrito" title="Negrito (Ctrl+B)"><b>B</b></button>
+              <button type="button" data-card-inline="italic" aria-label="Itálico" title="Itálico (Ctrl+I)"><i>I</i></button>
+              <button type="button" data-card-inline="strikeThrough" aria-label="Riscado" title="Riscado (Ctrl+Shift+X)"><s>S</s></button>
+              <button type="button" data-card-inline="normal" aria-label="Normal" title="Texto normal">N</button>
+              <span class="bubble-sep" aria-hidden="true"></span>
+              <button type="button" class="fg-swatch" data-card-fg="auto" title="Cor padrão do texto" aria-label="Cor padrão do texto"><i></i></button>
+              <button type="button" class="fg-swatch" data-card-fg="light" title="Texto claro" aria-label="Texto claro"><i></i></button>
+              <button type="button" class="fg-swatch" data-card-fg="dark" title="Texto escuro" aria-label="Texto escuro"><i></i></button>
+              <button type="button" class="fg-swatch" data-card-fg="purple" title="Texto roxo" aria-label="Texto roxo"><i></i></button>
+              <button type="button" class="fg-swatch" data-card-fg="blue" title="Texto azul" aria-label="Texto azul"><i></i></button>
+              <button type="button" class="fg-swatch" data-card-fg="green" title="Texto verde" aria-label="Texto verde"><i></i></button>
+              <button type="button" class="fg-swatch" data-card-fg="amber" title="Texto amarelo" aria-label="Texto amarelo"><i></i></button>
+              <button type="button" class="fg-swatch" data-card-fg="red" title="Texto vermelho" aria-label="Texto vermelho"><i></i></button>
+            </div>
+          </div>
+        </section>
+        <section id="crm" data-module hidden aria-labelledby="crm-title">
+          <header class="page-heading">
+            <div><h1 id="crm-title">Networking</h1><p>Organize contatos e mantenha suas conversas em dia.</p></div>
+            <button class="button primary" type="button" data-crm="new"><span data-icon="plus"></span>Novo contato</button>
+          </header>
+          <nav class="crm-tabs" aria-label="Seções de Networking">
+            <button type="button" data-crm="tab" data-view="overview"><span data-icon="grid"></span>Visão geral</button>
+            <button type="button" data-crm="tab" data-view="contacts"><span data-icon="people"></span>Contatos</button>
+            <button type="button" data-crm="tab" data-view="birthdays"><span data-icon="calendar"></span>Aniversários</button>
+          </nav>
+          <div id="crm-tools" hidden>
+            <div class="crm-tools-left">
+              <label class="crm-search"><span data-icon="search"></span><input type="search" id="crm-search" placeholder="Buscar contato…" aria-label="Buscar contato"></label>
+              <div class="crm-type-filter" role="group" aria-label="Filtrar por tipo">
+                <button type="button" data-crm="type" data-type="all">Todos</button>
+                <button type="button" data-crm="type" data-type="personal">Pessoal</button>
+                <button type="button" data-crm="type" data-type="business">Negócios</button>
+                <button type="button" data-crm="type" data-type="both">Ambos</button>
+              </div>
+              <button type="button" class="crm-fav-toggle" data-crm="favorites" aria-pressed="false" title="Mostrar só os favoritos"><span data-icon="star"></span>Favoritos</button>
+              <button type="button" class="crm-fav-toggle" data-crm="follow-filter" aria-pressed="false" title="Mostrar só quem está na hora de retomar"><span data-icon="message"></span><span>A retomar</span></button>
+              <span id="crm-count" class="crm-count"></span>
+            </div>
+            <div class="toolbar-group" aria-label="Formato da lista">
+              <button type="button" class="button" data-crm="mode" data-view="list"><span data-icon="list"></span>Lista</button>
+              <button type="button" class="button" data-crm="mode" data-view="board"><span data-icon="board"></span>Kanban</button>
+            </div>
+          </div>
+          <div id="crm-content"></div>
+          <p id="crm-status" role="status" class="sr-only"></p>
+        </section>
+        <section id="notes" data-module hidden aria-label="Notas locais">
+          <div id="notes-library">
+            <header class="page-heading">
+              <div><h1>Notas</h1><p>Guarde roteiros, ideias e registros de reuniões.</p></div>
+              <div class="page-actions">
+                <div class="split-button"><button class="button primary" type="button" id="note-create"><span data-icon="plus"></span>Nova nota</button><button class="button primary split-caret" type="button" data-notes-new aria-label="Mais opções de criação" aria-haspopup="menu"><span data-icon="chevron"></span></button></div>
+              </div>
+            </header>
+            <div id="notes-results"></div>
+          </div>
+          <article id="note-editor" hidden aria-label="Editor de notas">
+            <div class="note-heading">
+              <button id="note-back" class="note-ghost" type="button" aria-label="Voltar" title="Voltar"><span data-icon="back"></span><span>Voltar</span></button>
+              <span id="note-kind" class="note-kind" hidden><span data-icon="template"></span>Modelo</span>
+              <span id="note-meta" class="note-meta" aria-live="polite"></span>
+              <div class="note-actions">
+                <button id="note-use-template" class="button primary note-template-only" type="button"><span data-icon="plus"></span>Usar modelo</button>
+                <button id="note-save-template" class="note-ghost note-only" type="button" title="Salvar esta nota como modelo"><span data-icon="template"></span><span>Salvar como modelo</span></button>
+                <button id="note-duplicate" class="note-ghost" type="button" aria-label="Duplicar" title="Duplicar" data-icon="copy"></button>
+                <button id="note-delete" class="note-ghost" type="button" aria-label="Excluir" title="Excluir" data-icon="trash"></button>
+              </div>
+            </div>
+            <div id="note-backlinks" class="note-backlinks" hidden></div>
+            <div class="note-document">
+              <header class="note-fields">
+                <textarea id="note-title" rows="1" aria-label="Título" maxlength="160" placeholder="Sem título" spellcheck="true"></textarea>
+                <textarea id="note-subtitle" rows="1" aria-label="Subtítulo opcional" maxlength="240" placeholder="Adicionar subtítulo" spellcheck="true"></textarea>
+              </header>
+              <div id="note-body" contenteditable="true" role="textbox" aria-label="Conteúdo" aria-multiline="true" data-placeholder="Comece a escrever ou digite “/” para inserir blocos…"></div>
+            </div>
+          </article>
+        </section>
+      </main>
+    </div>
+  </div>
+  <dialog id="edit-dialog" aria-labelledby="dialog-title">
+    <form id="edit-form">
+      <header class="dialog-header"><h2 id="dialog-title"></h2><button class="icon-button" type="button" data-action="close-dialog" aria-label="Fechar" data-icon="close"></button></header>
+      <div class="dialog-fields">
+        <label id="title-field"><span>Título</span><input name="title" maxlength="80" required></label>
+        <p id="confirm-text" hidden></p>
+      </div>
+      <footer class="dialog-footer">
+        <button type="button" class="button" data-action="close-dialog">Cancelar</button>
+        <button id="dialog-confirm" class="button primary" type="submit">Concluir</button>
+      </footer>
+    </form>
+  </dialog>
+  <dialog id="note-link-dialog" aria-labelledby="note-link-title">
+    <div class="note-link-modal">
+      <header class="dialog-header"><h2 id="note-link-title">Nota vinculada</h2><button class="icon-button" type="button" data-action="close-note-dialog" aria-label="Fechar" data-icon="close"></button></header>
+      <div class="dialog-fields">
+        <div id="note-link-current" class="note-link-current" hidden></div>
+        <button type="button" class="button primary note-link-create" data-action="create-linked-note"><span data-icon="plus"></span><span>Criar nova nota e vincular</span></button>
+        <label><span>Vincular nota existente</span><input type="search" id="note-link-search" placeholder="Buscar em Notas…"></label>
+        <div id="note-link-list" class="note-link-list"></div>
+      </div>
+      <footer class="dialog-footer">
+        <button type="button" class="button" data-action="close-note-dialog">Fechar</button>
+      </footer>
+    </div>
+  </dialog>
+  <dialog id="palette" class="palette" aria-label="Buscar ou executar">
+    <div class="palette-search"><span data-icon="search"></span><input id="palette-input" type="text" role="combobox" aria-expanded="true" aria-controls="palette-results" aria-autocomplete="list" autocomplete="off" spellcheck="false" placeholder="Buscar tudo… use > ações, @ contatos, # tarefas, / notas"><kbd>Esc</kbd></div>
+    <div id="palette-results" class="palette-results" role="listbox" aria-label="Resultados"></div>
+    <footer class="palette-footer"><span><kbd>↑</kbd><kbd>↓</kbd> navegar</span><span><kbd>Enter</kbd> abrir</span><span class="palette-prefixes"><kbd>&gt;</kbd> ações <kbd>@</kbd> contatos <kbd>#</kbd> tarefas</span><span id="palette-hint-alt" hidden><kbd>Shift</kbd><kbd>Enter</kbd> <span id="palette-hint-alt-label"></span></span></footer>
+  </dialog>
+  <dialog id="backups-dialog" class="backups-dialog" aria-labelledby="backups-title">
+    <header class="dialog-header"><h2 id="backups-title">Backups</h2><button id="backups-close" class="icon-button" type="button" aria-label="Fechar" data-icon="close"></button></header>
+    <div class="backups-body">
+      <p class="backups-intro">O Kuarq guarda automaticamente uma cópia por dia e mantém os últimos 30 dias. Restaurar volta mapas, contatos e notas para o momento escolhido.</p>
+      <div class="backups-folder-row"><span data-icon="drive"></span><span id="backups-folder" class="backups-folder"></span><button id="backups-open-folder" class="button" type="button">Abrir pasta</button></div>
+      <ul id="backups-list" class="backups-list" aria-label="Backups disponíveis"></ul>
+    </div>
+    <footer class="dialog-footer"><p id="backups-status" class="backups-status" role="status"></p><button id="backups-create" class="button primary" type="button"><span data-icon="plus"></span>Fazer backup agora</button></footer>
+  </dialog>
+  <dialog id="drawer" class="drawer" aria-label="Formulário"></dialog>
+  <dialog id="crm-dialog" aria-labelledby="crm-dialog-title"></dialog>
+</body>
+</html>

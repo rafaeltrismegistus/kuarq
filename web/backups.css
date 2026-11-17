@@ -1,0 +1,30 @@
+button.sidebar-footer { width: 100%; border: 0; border-top: 1px solid var(--line); border-radius: 0; background: transparent; text-align: left; transition: color .15s; }
+button.sidebar-footer:hover { color: var(--text); }
+dialog.backups-dialog { width: min(560px, calc(100% - 32px)); max-height: min(640px, calc(100% - 48px)); }
+dialog.backups-dialog[open] { display: flex; flex-direction: column; }
+.backups-dialog .dialog-header { border-bottom: 1px solid var(--line); }
+.backups-body { display: grid; gap: 12px; min-height: 0; overflow-y: auto; padding: 14px 15px; }
+.backups-intro { color: var(--muted); font-size: 12.5px; line-height: 1.5; }
+.backups-folder-row { display: flex; align-items: center; gap: 8px; padding: 8px 8px 8px 11px; border: 1px solid var(--line); border-radius: 9px; background: var(--chrome); color: var(--muted); font-size: 12px; }
+.backups-folder-row svg { width: 15px; height: 15px; }
+.backups-folder { flex: 1; min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.backups-folder-row .button { min-height: 28px; font-size: 12px; }
+.backups-list { display: grid; margin: 0; padding: 0; list-style: none; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+.backup-row { display: flex; align-items: center; gap: 11px; padding: 10px 12px; }
+.backup-row + .backup-row, .backup-confirm + .backup-row { border-top: 1px solid var(--line); }
+.backup-row:hover { background: var(--hover); }
+.backup-icon { flex: none; display: grid; place-items: center; width: 30px; height: 30px; border-radius: 8px; background: var(--hover); color: var(--muted); }
+.backup-icon svg { width: 15px; height: 15px; }
+.backup-text { display: grid; gap: 2px; flex: 1; min-width: 0; }
+.backup-text strong { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; }
+.backup-kind { padding: 1px 7px; border: 1px solid var(--line); border-radius: 6px; color: var(--muted); font-size: 10.5px; font-weight: 600; }
+.backup-text small { color: var(--muted); font-size: 12px; }
+.backup-row .button { min-height: 30px; font-size: 12px; }
+.backup-confirm { display: grid; gap: 10px; padding: 12px; border-top: 1px solid var(--line); background: var(--soft); font-size: 12.5px; line-height: 1.5; }
+.backup-confirm-actions { display: flex; justify-content: flex-end; gap: 8px; }
+.backup-confirm-actions .button { min-height: 30px; font-size: 12px; }
+.backup-empty { padding: 22px 12px; color: var(--muted); font-size: 12.5px; text-align: center; }
+.backups-dialog .dialog-footer { justify-content: space-between; }
+.backups-status { min-width: 0; color: var(--muted); font-size: 12px; }
+.backups-status[data-error] { color: var(--danger); }
+.backups-dialog .dialog-footer .button svg { width: 15px; height: 15px; }

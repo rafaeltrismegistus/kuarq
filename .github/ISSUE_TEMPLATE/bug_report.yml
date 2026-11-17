@@ -1,0 +1,34 @@
+name: Reportar um problema
+description: Algo não funciona como deveria.
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: O que aconteceu
+      description: Descreva o problema e o que você esperava que acontecesse.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Como reproduzir
+      placeholder: |
+        1. Abra ...
+        2. Clique em ...
+        3. Veja o erro
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Versão do Kuarq
+      placeholder: v1.0.0
+  - type: input
+    id: windows
+    attributes:
+      label: Versão do Windows
+      placeholder: Windows 11 23H2
+  - type: markdown
+    attributes:
+      value: "**Não anexe o seu `mapas.json` nem capturas com dados pessoais.** Se precisar, recrie o problema com dados fictícios."

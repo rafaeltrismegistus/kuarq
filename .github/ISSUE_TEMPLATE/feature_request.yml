@@ -1,0 +1,19 @@
+name: Sugerir uma melhoria
+description: Ideia de recurso ou ajuste.
+labels: [melhoria]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Qual problema isso resolve
+    validations:
+      required: true
+  - type: textarea
+    id: idea
+    attributes:
+      label: Como você imagina
+  - type: dropdown
+    id: module
+    attributes:
+      label: Módulo
+      options: [Hoje, Trabalho, Networking, Toolkit, Núcleo, Geral]

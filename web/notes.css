@@ -1,0 +1,277 @@
+/* ---------- Library ---------- */
+.notes-search {
+  display: flex; align-items: center; gap: 8px; width: min(100%, 340px);
+  margin-bottom: 18px; padding: 0 11px; min-height: 38px;
+  color: var(--muted); background: var(--panel); border: 1px solid var(--line); border-radius: 9px;
+  transition: border-color .15s;
+}
+.notes-search svg { width: 15px; height: 15px; }
+.notes-search input { width: 100%; min-width: 0; padding: 7px 0; background: transparent; border: 0; outline: none; color: var(--text); }
+.notes-search input:focus-visible { outline: none; }
+.notes-search:focus-within { border-color: var(--edge); outline: 2px solid var(--focus); outline-offset: 1px; }
+.notes-empty {
+  display: grid; justify-items: center; gap: 6px; padding: 44px 16px; text-align: center;
+  background: var(--panel); border: 1px dashed var(--line); border-radius: var(--radius);
+}
+.notes-empty strong { font-size: 15px; }
+.notes-empty p { max-width: 340px; color: var(--muted); font-size: 13px; line-height: 1.5; }
+.notes-empty-icon { display: grid; place-items: center; width: 42px; height: 42px; margin-bottom: 4px; border-radius: 12px; background: var(--soft); color: var(--accent); }
+.notes-empty-icon svg { width: 20px; height: 20px; }
+.notes-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 250px), 1fr)); gap: 14px; }
+.note-card {
+  position: relative; display: flex; flex-direction: column; min-height: 160px;
+  background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius);
+  box-shadow: var(--shadow-sm); transition: border-color .15s, box-shadow .15s, transform .15s;
+}
+.note-card-open { flex: 1; display: flex; flex-direction: column; gap: 7px; padding: 16px 16px 10px; border: 0; border-radius: var(--radius) var(--radius) 0 0; background: transparent; text-align: left; }
+.note-card-open:focus-visible { outline-offset: -3px; }
+.note-card-actions { position: absolute; top: 10px; right: 10px; display: flex; gap: 2px; padding: 2px; border: 1px solid var(--line); border-radius: 8px; background: var(--raised); box-shadow: var(--shadow-sm); opacity: 0; transition: opacity .15s; }
+.note-card:hover .note-card-actions, .note-card:focus-within .note-card-actions { opacity: 1; }
+.note-card-action { display: grid; place-items: center; width: 28px; height: 28px; padding: 0; border: 0; border-radius: 6px; background: transparent; color: var(--muted); }
+.note-card-action:hover { background: var(--hover); color: var(--text); }
+.note-card-action[aria-label^="Excluir"]:hover { background: var(--danger-soft); color: var(--danger); }
+.note-card-action svg { width: 15px; height: 15px; }
+.note-card.template { border-style: dashed; border-color: var(--edge); }
+.note-card.template .note-card-icon { background: var(--info-soft); color: var(--info); }
+.note-use { min-height: 28px; padding: 0 10px; font-size: 12px; }
+.note-card:hover { border-color: var(--edge); box-shadow: var(--shadow-md); transform: translateY(-1px); }
+.note-card-top { display: flex; align-items: flex-start; gap: 9px; padding-right: 60px; }
+.note-card-icon { flex: none; display: grid; place-items: center; width: 26px; height: 26px; border-radius: 7px; background: var(--soft); color: var(--accent); }
+.note-card-icon svg { width: 14px; height: 14px; }
+.note-card-title, .note-card-preview, .note-card-subtitle { display: -webkit-box; -webkit-box-orient: vertical; overflow: hidden; overflow-wrap: anywhere; }
+.note-card-title { -webkit-line-clamp: 2; padding-top: 3px; font-size: 15px; line-height: 1.35; }
+.note-card-title.untitled { color: var(--muted); font-style: italic; }
+.note-card-subtitle { -webkit-line-clamp: 1; color: var(--text); opacity: .8; font-size: 12px; }
+.note-card-preview { -webkit-line-clamp: 3; line-height: 1.5; color: var(--muted); font-size: 12.5px; }
+.note-card-foot { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 46px; margin: 0 16px; padding: 8px 0 10px; border-top: 1px solid var(--line); }
+.note-card-date { color: var(--muted); font-size: 11px; }
+.note-card-tasks { display: inline-flex; align-items: center; gap: 4px; padding: 2px 7px; border-radius: 10px; background: var(--hover); color: var(--muted); font-size: 11px; font-weight: 600; }
+.note-card-tasks[data-done] { background: var(--success-soft); color: var(--success); }
+.note-card-tasks svg { width: 12px; height: 12px; }
+
+/* ---------- Document editor ---------- */
+#note-editor { max-width: 880px; margin-inline: auto; }
+.note-heading { display: flex; align-items: center; gap: 12px; margin: -6px 0 18px; }
+.note-ghost {
+  display: inline-flex; align-items: center; gap: 6px; min-height: 32px; padding: 0 9px;
+  border: 0; border-radius: 7px; background: transparent; color: var(--muted); font-size: 13px;
+  transition: background-color .15s, color .15s;
+}
+.note-ghost:hover { background: var(--hover); color: var(--text); }
+.note-ghost svg { width: 16px; height: 16px; }
+#note-delete { margin-left: auto; }
+#note-delete:hover { background: var(--danger-soft); color: var(--danger); }
+.note-meta { color: var(--subtle); font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.note-document { padding: 0 clamp(4px, 5vw, 64px) 120px; }
+.note-fields { display: grid; gap: 2px; margin-bottom: 18px; padding-bottom: 18px; border-bottom: 1px solid var(--line); }
+.note-fields textarea {
+  display: block; width: 100%; min-width: 0; margin: 0; padding: 0; overflow: hidden; resize: none;
+  border: 0; border-radius: 0; background: transparent; color: var(--text); outline: none;
+}
+.note-fields textarea:focus-visible { outline: none; }
+#note-title { font-size: clamp(28px, 4.2vw, 40px); font-weight: 750; line-height: 1.2; letter-spacing: -.03em; }
+#note-subtitle { margin-top: 6px; color: var(--muted); font-size: 17px; line-height: 1.45; }
+.note-fields textarea::placeholder { color: var(--subtle); opacity: .7; }
+#note-title::placeholder { opacity: .5; }
+
+#note-body {
+  position: relative; min-height: 50vh; outline: none;
+  font-size: 15px; line-height: 1.7; overflow-wrap: anywhere; caret-color: var(--accent);
+}
+#note-body[data-empty]::before, #topic-note[data-empty]::before { content: attr(data-placeholder); position: absolute; top: 0; left: 0; color: var(--subtle); pointer-events: none; }
+#topic-note[data-empty]::before { top: 10px; left: 12px; }
+.rich-doc :is(p, ul, ol, blockquote) { margin: 0 0 .55em; }
+.rich-doc h1 { margin: 1.1em 0 .35em; font-size: 1.85em; line-height: 1.25; letter-spacing: -.02em; }
+.rich-doc h2 { margin: 1em 0 .3em; font-size: 1.45em; line-height: 1.3; letter-spacing: -.015em; }
+.rich-doc h3 { margin: .9em 0 .25em; font-size: 1.17em; line-height: 1.35; }
+.rich-doc > :first-child { margin-top: 0; }
+.rich-doc :is(ul, ol) { padding-inline-start: 1.6em; }
+.rich-doc li { padding-left: .15em; }
+.rich-doc li::marker { color: var(--accent); }
+.rich-doc blockquote { padding: 2px 0 2px 16px; border-left: 3px solid var(--edge); color: var(--muted); }
+.rich-doc hr { height: 1px; margin: 1.3em 0; border: 0; background: var(--line); }
+.rich-doc ::selection { background: color-mix(in srgb, var(--focus) 35%, transparent); }
+
+.rich-doc ul.checklist { padding-inline-start: 0; list-style: none; }
+.rich-doc ul.checklist > li { position: relative; padding-left: 1.85em; }
+.rich-doc ul.checklist > li::before {
+  content: ""; position: absolute; left: .1em; top: .3em; width: 1.05em; height: 1.05em; box-sizing: border-box;
+  border: 1.5px solid var(--edge); border-radius: 5px; background: var(--panel); cursor: pointer;
+  transition: background-color .15s, border-color .15s;
+}
+.rich-doc ul.checklist > li:hover::before { border-color: var(--accent); }
+.rich-doc ul.checklist > li::after {
+  content: ""; position: absolute; left: .47em; top: .45em; width: .3em; height: .55em;
+  border: solid #fff; border-width: 0 2px 2px 0; transform: rotate(45deg) scale(0); transition: transform .15s; pointer-events: none;
+}
+.rich-doc ul.checklist > li[data-checked="true"]::before { background: var(--success); border-color: var(--success); }
+.rich-doc ul.checklist > li[data-checked="true"]::after { transform: rotate(45deg) scale(1); }
+:root[data-theme="dark"] .rich-doc ul.checklist > li::after { border-color: #10231a; }
+.rich-doc ul.checklist > li[data-checked="true"] { color: var(--muted); text-decoration: line-through; text-decoration-color: var(--subtle); }
+.rich-doc ul.checklist > li::marker { content: none; }
+
+/* ---------- Floating toolbar ---------- */
+.note-bubble {
+  position: fixed; z-index: 20; display: flex; align-items: center; gap: 2px; padding: 4px;
+  border: 1px solid var(--line); border-radius: 10px; background: var(--raised); box-shadow: var(--shadow-lg);
+  animation: note-pop .12s ease-out;
+}
+@keyframes note-pop { from { opacity: 0; transform: translateY(4px) scale(.98); } }
+.note-bubble button {
+  display: inline-flex; align-items: center; justify-content: center; gap: 4px; min-width: 30px; height: 30px; padding: 0 7px;
+  border: 0; border-radius: 6px; background: transparent; color: var(--text); font-size: 14px;
+}
+.note-bubble button:hover { background: var(--hover); }
+.note-bubble button[aria-pressed="true"] { background: var(--soft); color: var(--accent); }
+.note-bubble svg { width: 16px; height: 16px; }
+.note-bubble b, .note-bubble i, .note-bubble u, .note-bubble s { font-size: 14px; }
+.bubble-sep { width: 1px; height: 18px; margin: 0 3px; background: var(--line); }
+.bubble-block { position: relative; }
+.bubble-block-toggle { min-width: 104px !important; justify-content: space-between !important; font-size: 13px !important; font-weight: 600; }
+.bubble-block-toggle svg { width: 13px; height: 13px; color: var(--muted); }
+.bubble-menu {
+  position: absolute; top: calc(100% + 8px); left: -4px; display: grid; gap: 1px; width: 210px; padding: 5px;
+  border: 1px solid var(--line); border-radius: 10px; background: var(--raised); box-shadow: var(--shadow-lg);
+}
+.bubble-menu button { justify-content: flex-start; gap: 10px; width: 100%; height: 32px; padding: 0 8px; font-size: 13px; }
+.bubble-menu svg { width: 15px; height: 15px; color: var(--muted); }
+.block-glyph { display: inline-grid; place-items: center; width: 15px; color: var(--muted); font-size: 11px !important; font-weight: 750; }
+
+/* ---------- Slash menu ---------- */
+.note-slash {
+  position: fixed; z-index: 21; display: grid; gap: 1px; width: 290px; max-height: 330px; overflow: auto; padding: 6px;
+  border: 1px solid var(--line); border-radius: 12px; background: var(--raised); box-shadow: var(--shadow-lg);
+  animation: note-pop .12s ease-out;
+}
+.slash-heading { padding: 6px 8px 5px; color: var(--subtle); font-size: 11px; font-weight: 650; letter-spacing: .03em; text-transform: uppercase; }
+.slash-option {
+  display: flex; align-items: center; gap: 11px; width: 100%; padding: 6px 8px;
+  border: 0; border-radius: 8px; background: transparent; color: var(--text); text-align: left;
+}
+.slash-option[aria-selected="true"], .slash-option:hover { background: var(--hover); }
+.slash-option[aria-selected="true"] { background: var(--soft); }
+.slash-icon {
+  flex: none; display: grid; place-items: center; width: 34px; height: 34px;
+  border: 1px solid var(--line); border-radius: 8px; background: var(--panel); color: var(--muted); font-size: 12px; font-weight: 750;
+}
+.slash-icon svg { width: 17px; height: 17px; }
+.slash-text { display: grid; gap: 1px; min-width: 0; }
+.slash-text strong { font-size: 13px; font-weight: 600; }
+.slash-text small { color: var(--muted); font-size: 11.5px; }
+
+/* ---------- Topic note toolbar (mind maps) ---------- */
+.note-toolbar {
+  position: sticky; top: 0; z-index: 1;
+  display: flex; flex-wrap: wrap; align-items: center; gap: 4px;
+  padding: 7px clamp(14px, 4vw, 36px); border-block: 1px solid var(--line); background: var(--chrome);
+}
+.note-toolbar button {
+  display: inline-flex; justify-content: center; align-items: center; min-width: 30px; min-height: 29px;
+  padding: 0 8px; border: 1px solid transparent; border-radius: 6px; background: transparent;
+  color: var(--muted); font-size: 12px;
+}
+.note-toolbar button:hover, .note-toolbar button[aria-pressed="true"] { color: var(--accent); background: var(--soft); }
+.note-toolbar button[aria-pressed="true"] { border-color: var(--line); }
+.note-toolbar svg { width: 15px; height: 15px; }
+
+/* ---------- Notes library extras ---------- */
+.page-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.page-actions .button svg { width: 16px; height: 16px; }
+#notes-search-field { margin-bottom: 16px; }
+.notes-intro { margin: -4px 0 14px; color: var(--muted); font-size: 13px; }
+.notes-empty-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 10px; }
+.notes-recent { padding: 6px 16px 6px 10px !important; }
+.notes-recent-open { flex: 1; display: flex; align-items: center; gap: 10px; min-width: 0; padding: 4px 6px; border: 0; border-radius: 8px; background: transparent; text-align: left; }
+.notes-recent-open:hover strong { color: var(--accent); }
+.notes-recent-text { display: grid; gap: 1px; flex: 1; min-width: 0; }
+.notes-recent-text strong { font-size: 13px; font-weight: 650; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.notes-recent-text small { color: var(--muted); font-size: 12px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.notes-template-row .button { min-height: 28px; padding: 0 12px; font-size: 12px; }
+.notes-template-row .note-card-icon { background: var(--info-soft); color: var(--info); }
+.notes-tasks { margin: 0; padding: 6px 0; list-style: none; }
+.notes-tasks li { display: flex; align-items: flex-start; gap: 11px; padding: 8px 16px; }
+.notes-tasks li:hover { background: var(--hover); }
+.notes-task-check { flex: none; width: 18px; height: 18px; margin-top: 1px; padding: 0; border: 1.5px solid var(--edge); border-radius: 5px; background: var(--panel); }
+.notes-task-check:hover { border-color: var(--success); background: var(--success-soft); }
+.notes-task-text { display: grid; gap: 2px; min-width: 0; font-size: 13px; }
+.notes-task-source { width: fit-content; padding: 0; border: 0; background: transparent; color: var(--muted); font-size: 11.5px; text-align: left; }
+.notes-task-source:hover { color: var(--accent); text-decoration: underline; }
+.notes-more { padding: 10px 16px; border-top: 1px solid var(--line); color: var(--muted); font-size: 12px; }
+.notes-toast {
+  position: fixed; left: 50%; bottom: 24px; z-index: 30; display: flex; align-items: center; gap: 14px; transform: translateX(-50%);
+  max-width: calc(100% - 32px); padding: 10px 12px 10px 16px; border-radius: 10px; background: var(--text); color: var(--page);
+  box-shadow: var(--shadow-lg); font-size: 13px; animation: note-pop .15s ease-out;
+}
+.notes-toast button { padding: 5px 9px; border: 0; border-radius: 6px; background: transparent; color: var(--page); font-weight: 700; text-decoration: underline; }
+.notes-toast button:hover { background: #ffffff1f; }
+
+/* ---------- Editor heading extras ---------- */
+.note-actions { display: flex; align-items: center; gap: 4px; margin-left: auto; }
+.note-actions .button { min-height: 32px; font-size: 12.5px; }
+.note-actions .button svg { width: 15px; height: 15px; }
+#note-delete { margin-left: 0; }
+.note-kind { display: inline-flex; align-items: center; gap: 5px; padding: 3px 9px; border-radius: 6px; background: var(--info-soft); color: var(--info); font-size: 12px; font-weight: 650; }
+.note-kind svg { width: 13px; height: 13px; }
+#note-editor[data-kind="template"] .note-only, #note-editor:not([data-kind="template"]) .note-template-only { display: none; }
+@media (max-width: 760px) { #note-save-template span:last-child { display: none; } }
+
+/* ---------- Topic notes in mind maps ---------- */
+#topic-note { font-size: 14px; line-height: 1.6; }
+#topic-note[data-empty]::before { position: absolute; padding-right: 12px; }
+.topic-writing { position: relative; }
+
+/* ---------- Overview rows (neutral, like the rest of the app) ---------- */
+.crm-panel .note-card-icon, .crm-panel .notes-template-row .note-card-icon { background: var(--hover); color: var(--muted); }
+
+/* ---------- Library list (same pattern as Tarefas) ---------- */
+.nl-table th:first-child { width: auto; }
+.nl-table thead th:nth-child(n+2) { width: 1%; white-space: nowrap; }
+.nl-title-cell { gap: 10px; }
+.nl-open { display: grid; flex: 0 1 auto; min-width: 0; gap: 1px; padding: 0; border: 0; background: transparent; color: var(--text); text-align: left; cursor: pointer; }
+.nl-open strong { font-size: 13px; font-weight: 600; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.nl-open strong.untitled { color: var(--muted); }
+.nl-open small { color: var(--muted); font-size: 12px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; max-width: 560px; }
+.nl-open:hover strong { text-decoration: underline; text-underline-offset: 3px; }
+.nl-row .note-card-icon { width: 28px; height: 28px; }
+.nl-actions { display: inline-flex; gap: 4px; }
+.nl-actions button:hover { color: var(--text) !important; border-color: var(--edge) !important; }
+.nl-actions button[data-nl="delete"]:hover { color: var(--danger) !important; border-color: var(--danger) !important; }
+.nl-date { color: var(--muted); font-size: 12px; white-space: nowrap; }
+.nl-count { margin-left: 2px; color: var(--subtle); font-size: 11px; }
+.note-card-foot .kit-project { max-width: 110px; }
+
+/* Note backlinks (mind maps, project) */
+.note-backlinks { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; max-width: 760px; margin: 0 auto 14px; padding: 0 2px; }
+.note-backlinks-label { display: inline-flex; align-items: center; gap: 5px; margin-right: 2px; color: var(--muted); font-size: 12px; font-weight: 600; }
+.note-backlinks-label svg { width: 13px; height: 13px; }
+.note-backlink { display: inline-flex; align-items: center; gap: 5px; max-width: 100%; min-height: 28px; padding: 0 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--panel); color: var(--muted); font-size: 12px; }
+.note-backlink:hover { border-color: var(--edge); color: var(--text); }
+.note-backlink svg { flex: none; width: 13px; height: 13px; }
+.note-backlink strong { color: var(--text); font-weight: 600; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.note-backlink span { white-space: nowrap; }
+
+/* ---------- Links in rich text ---------- */
+.rich-doc a { color: var(--accent); text-decoration: underline; text-decoration-color: color-mix(in srgb, var(--accent) 45%, transparent); text-underline-offset: 2px; cursor: text; }
+.rich-doc a:hover { text-decoration-color: var(--accent); }
+.rich-doc:not([contenteditable="true"]) a { cursor: pointer; }
+.rich-link-pop {
+  position: fixed; z-index: 21; display: flex; align-items: center; padding: 4px;
+  border: 1px solid var(--line); border-radius: 10px; background: var(--raised); box-shadow: var(--shadow-lg);
+  animation: note-pop .12s ease-out;
+}
+.rich-link-pop[hidden] { display: none; }
+.rich-link-pop[data-mode="edit"] .rich-link-view, .rich-link-pop[data-mode="view"] .rich-link-form { display: none; }
+.rich-link-form { display: flex; align-items: center; gap: 6px; }
+.rich-link-icon { display: inline-grid; place-items: center; width: 26px; color: var(--muted); }
+.rich-link-icon svg { width: 15px; height: 15px; }
+.rich-link-form input { width: 300px; height: 30px; padding: 0 8px; border: 1px solid var(--line); border-radius: 7px; background: var(--page); color: var(--text); font: inherit; font-size: 13px; outline: none; }
+.rich-link-form input:focus { border-color: var(--accent); }
+.rich-link-form input[aria-invalid="true"] { border-color: var(--danger); }
+.rich-link-apply { height: 30px; padding: 0 12px; border: 0; border-radius: 7px; background: var(--primary); color: var(--on-primary, #fff); font: inherit; font-size: 12.5px; font-weight: 650; }
+.rich-link-view { display: flex; align-items: center; gap: 2px; }
+.rich-link-view button { display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-width: 30px; height: 30px; padding: 0 7px; border: 0; border-radius: 6px; background: transparent; color: var(--text); font: inherit; font-size: 13px; }
+.rich-link-view button:hover { background: var(--hover); }
+.rich-link-view svg { width: 15px; height: 15px; }
+.rich-link-url { max-width: 280px; color: var(--accent) !important; }
+.rich-link-url span { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.rich-link-url svg { flex: none; width: 13px !important; height: 13px !important; }

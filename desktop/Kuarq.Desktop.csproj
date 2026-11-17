@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <Nullable>enable</Nullable>
+    <AssemblyName>Kuarq</AssemblyName>
+    <Product>Kuarq</Product>
+    <Title>Kuarq</Title>
+    <RootNamespace>Kuarq.Desktop</RootNamespace>
+    <Version>1.0.0</Version>
+    <Company>Rafael Trismegisto</Company>
+    <Copyright>Copyright (c) 2026 Rafael Trismegisto</Copyright>
+    <Description>Sistema pessoal local para Windows.</Description>
+    <ApplicationIcon>kuarq.ico</ApplicationIcon>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.4314.35" />
+    <Resource Include="kuarq.ico" />
+    <Content Include="..\web\**\*" Link="web\%(RecursiveDir)%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+  </ItemGroup>
+</Project>
