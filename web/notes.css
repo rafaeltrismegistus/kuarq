@@ -275,3 +275,12 @@
 .rich-link-url { max-width: 280px; color: var(--accent) !important; }
 .rich-link-url span { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
 .rich-link-url svg { flex: none; width: 13px !important; height: 13px !important; }
+
+/* Link para nota (inserido pelo "/"): destaque clicável que abre a nota */
+.note-ref { padding: 0 4px; border-radius: 5px; background: var(--soft); color: var(--accent); font-weight: 600; text-decoration: none; cursor: pointer; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
+.note-ref::before { content: "↗ "; font-weight: 500; opacity: .7; }
+.note-ref:hover { text-decoration: underline; text-underline-offset: 3px; }
+.slash-search { width: 100%; min-height: 34px; margin: 0 0 6px; padding: 0 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--chrome); color: var(--text); font: inherit; font-size: 13px; outline: none; }
+.slash-search:focus { border-color: var(--edge); }
+.slash-list { display: grid; gap: 1px; }
+.slash-empty { padding: 10px 8px; color: var(--muted); font-size: 12.5px; }

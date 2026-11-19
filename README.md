@@ -13,7 +13,7 @@
 Tarefas, projetos, networking, notas, mapas mentais, finanças e quadro dos sonhos<br />
 em um só app para Windows: rápido, offline e sem conta, nuvem ou assinatura.
 
-![Versão](https://img.shields.io/badge/vers%C3%A3o-1.0.0-7c5cbf?style=flat-square)
+![Versão](https://img.shields.io/badge/vers%C3%A3o-2.0.0-7c5cbf?style=flat-square)
 ![Windows](https://img.shields.io/badge/Windows-10_%7C_11-171717?style=flat-square&logo=windows)
 ![.NET](https://img.shields.io/badge/.NET-10-512bd4?style=flat-square&logo=dotnet&logoColor=white)
 ![WebView2](https://img.shields.io/badge/WebView2-Edge-0078d4?style=flat-square&logo=microsoftedge&logoColor=white)
@@ -130,6 +130,7 @@ kuarq/
 - [Guia dos módulos](docs/MODULOS.md): como usar cada tela.
 - [Arquitetura](docs/ARQUITETURA.md): como o app nativo e a interface conversam e como criar um módulo.
 - [Dados e backup](docs/DADOS-E-BACKUP.md): formato, limites, restauração e migração.
+- [Diretrizes de engenharia](.ai/README.md): contexto, estado atual, mapa do código e regras para quem desenvolve.
 - [Changelog](CHANGELOG.md) · [Segurança](SECURITY.md) · [Contribuir](CONTRIBUTING.md)
 
 ## Contribuir

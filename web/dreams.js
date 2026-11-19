@@ -608,6 +608,7 @@ const dreams = (() => {
     },
     command: (verb) => { if (verb === "new") newDream(); },
     all, open: (id) => panel(id), openPage, newDream, stageNames,
+    current: () => pageId ?? (drawer.open && drawer.dataset.panel === "dream" ? panelId : undefined),
   };
   kit.register("dreams", "Quadro dos sonhos", module);
   return module;

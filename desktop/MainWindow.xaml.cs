@@ -20,6 +20,8 @@ public partial class MainWindow : Window
     private readonly BackupStore backups;
     private bool closed;
     private bool closing;
+    /* Tamanho da janela antes da visão app (estreita, como celular); nulo fora dela. */
+    private Rect? beforeApp;
     private bool closeApproved;
 
     /* New installs keep data in %LOCALAPPDATA%\Kuarq. Installs from before the rename
@@ -57,6 +59,12 @@ public partial class MainWindow : Window
 
     [DllImport("dwmapi.dll")]
     private static extern int DwmSetWindowAttribute(nint window, int attribute, ref int value, int size);
+    [DllImport("user32.dll")]
+    private static extern bool ReleaseCapture();
+    [DllImport("user32.dll")]
+    private static extern nint SendMessage(nint window, int message, nint wParam, nint lParam);
+    private const int WmNcLeftButtonDown = 0xA1;
+    private const int HtCaption = 2;
 
     private void OnSourceInitialized(object? sender, EventArgs args)
     {
@@ -65,12 +73,58 @@ public partial class MainWindow : Window
         _ = DwmSetWindowAttribute(new WindowInteropHelper(this).Handle, 33, ref rounded, sizeof(int));
     }
 
-    private void OnCloseClick(object sender, RoutedEventArgs args) => SystemCommands.CloseWindow(this);
-    private void OnMinimizeClick(object sender, RoutedEventArgs args) => SystemCommands.MinimizeWindow(this);
-    private void OnResizeClick(object sender, RoutedEventArgs args)
+    /* Botões e arraste da janela vêm da barra do topo da interface (ação "window"). */
+    private void WindowCommand(string command)
     {
-        if (WindowState == WindowState.Maximized) SystemCommands.RestoreWindow(this);
-        else SystemCommands.MaximizeWindow(this);
+        switch (command)
+        {
+            case "minimize":
+                SystemCommands.MinimizeWindow(this);
+                break;
+            case "maximize":
+                if (WindowState == WindowState.Maximized) SystemCommands.RestoreWindow(this);
+                else SystemCommands.MaximizeWindow(this);
+                break;
+            case "close":
+                SystemCommands.CloseWindow(this);
+                break;
+            case "app":
+                if (beforeApp is Rect previous)
+                {
+                    if (WindowState == WindowState.Maximized) SystemCommands.RestoreWindow(this);
+                    Left = previous.Left; Top = previous.Top; Width = previous.Width; Height = previous.Height;
+                    beforeApp = null;
+                    Topmost = false;
+                }
+                else
+                {
+                    if (WindowState == WindowState.Maximized) SystemCommands.RestoreWindow(this);
+                    beforeApp = new Rect(Left, Top, Width, Height);
+                    var area = SystemParameters.WorkArea;
+                    Width = 430;
+                    Height = Math.Min(900, area.Height - 40);
+                    Left = Math.Max(area.Left, Math.Min(Left + beforeApp.Value.Width - Width, area.Right - Width));
+                    Top = Math.Max(area.Top, Math.Min(Top, area.Bottom - Height));
+                    Topmost = true; /* Na visão app a janela fica sempre à frente das outras. */
+                }
+                break;
+            case "drag":
+                ReleaseCapture();
+                SendMessage(new WindowInteropHelper(this).Handle, WmNcLeftButtonDown, HtCaption, 0);
+                break;
+            default:
+                throw new InvalidDataException();
+        }
+    }
+
+    /* Maximizada, a janela sem moldura passa um pouco da tela: compensa e avisa a interface. */
+    private void OnStateChanged(object? sender, EventArgs args)
+    {
+        var maximized = WindowState == WindowState.Maximized;
+        var frame = SystemParameters.WindowResizeBorderThickness;
+        WindowSurface.Margin = maximized ? new Thickness(frame.Left + 4, frame.Top + 4, frame.Right + 4, frame.Bottom + 4) : new Thickness(0);
+        WorkspaceView.Margin = new Thickness(maximized ? 0 : 4);
+        WorkspaceView.CoreWebView2?.PostWebMessageAsJson(JsonSerializer.Serialize(new { @event = "window", maximized }));
     }
 
     private async void OnLoaded(object sender, RoutedEventArgs args)
@@ -194,6 +248,29 @@ public partial class MainWindow : Window
                 case "theme":
                     ApplyTheme(body.GetProperty("data").GetString() == "dark");
                     break;
+                case "ui-get":
+                {
+                    /* Estado da interface (guias abertas), separado dos dados. */
+                    var file = Path.Combine(dataDirectory, "ui.json");
+                    data = File.Exists(file) ? File.ReadAllText(file) : null;
+                    break;
+                }
+                case "ui-set":
+                {
+                    var text = body.GetProperty("data").GetString() ?? "";
+                    if (text.Length > 256 * 1024) throw new InvalidDataException();
+                    using (JsonDocument.Parse(text)) { }
+                    Directory.CreateDirectory(dataDirectory);
+                    var file = Path.Combine(dataDirectory, "ui.json");
+                    File.WriteAllText(file + ".tmp", text);
+                    File.Move(file + ".tmp", file, true);
+                    data = true;
+                    break;
+                }
+                case "window":
+                    WindowCommand(body.GetProperty("data").GetString() ?? "");
+                    data = new { maximized = WindowState == WindowState.Maximized, app = beforeApp is not null };
+                    break;
                 default:
                     return;
             }
@@ -239,10 +316,9 @@ public partial class MainWindow : Window
 
     private void ApplyTheme(bool dark)
     {
-        TitleBar.Background = new SolidColorBrush(dark ? Color.FromRgb(31, 30, 29) : Color.FromRgb(240, 238, 235));
-        TitleBar.BorderBrush = new SolidColorBrush(dark ? Color.FromRgb(61, 61, 57) : Color.FromRgb(222, 218, 215));
-        WindowTitle.Foreground = Status.Foreground = new SolidColorBrush(dark ? Color.FromRgb(250, 249, 245) : Color.FromRgb(64, 59, 68));
-        WindowSurface.Background = new SolidColorBrush(dark ? Color.FromRgb(38, 38, 36) : Color.FromRgb(248, 247, 244));
+        /* A borda em volta da interface usa a cor da faixa das guias (--kq-strip). */
+        Status.Foreground = new SolidColorBrush(dark ? Color.FromRgb(250, 249, 245) : Color.FromRgb(64, 59, 68));
+        WindowSurface.Background = new SolidColorBrush(dark ? Color.FromRgb(22, 22, 21) : Color.FromRgb(240, 239, 237));
     }
 
     private async void OnClosing(object? sender, CancelEventArgs args)

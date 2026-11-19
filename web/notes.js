@@ -10,7 +10,12 @@ const notes = (() => {
   const body = $("#note-body");
   const meta = $("#note-meta");
   const kindBadge = $("#note-kind");
-  const formatting = richText.editor(body, { onEdit: updateNote });
+  const formatting = richText.editor(body, {
+    onEdit: updateNote,
+    notes: () => noteList().filter((item) => item !== active).sort((a, b) => b.updatedAt - a.updatedAt)
+      .map((item) => ({ id: item.id, title: noteTitle(item), detail: item.subtitle || "" })),
+    openNote: (id) => { updateNote(); if (!openById(id)) kit.toast("Essa nota não existe mais."); },
+  });
   const updatedLabel = new Intl.DateTimeFormat("pt-BR", { dateStyle: "medium" });
   const editedLabel = new Intl.DateTimeFormat("pt-BR", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
   const suggestions = [
@@ -28,7 +33,7 @@ const notes = (() => {
   const templateList = () => workspace.noteTemplates ??= [];
   const listFor = (kind) => kind === "template" ? templateList() : noteList();
   const noteTitle = (note) => note.title.trim() || "Sem título";
-  const fold = (text) => text.normalize("NFD").replace(/\p{M}/gu, "").toLowerCase();
+  const fold = (text) => kit.fold(text);
   const node = (tag, className, text = "") => Object.assign(document.createElement(tag), { className, textContent: text });
   function valid(data) {
     if (data === undefined) return true;
@@ -372,7 +377,8 @@ const notes = (() => {
     Object.assign(active, fields, { updatedAt: Date.now() });
     updateCrumb();
     updateMeta();
-    changed(300);
+    /* Salva 3 s depois da última tecla (antes de fechar ou recarregar, salva na hora). */
+    changed(3000);
   }
 
   function createNote() {
@@ -469,6 +475,7 @@ const notes = (() => {
 
   return {
     show, valid, openById, createNoteRecord, toggleTask,
+    current: () => (active && !editor.hidden ? { id: active.id, kind: activeKind } : undefined),
     pendingTasks: () => noteList().flatMap(tasksOf).filter((task) => !task.done),
     newNote: createNote,
     newTemplate: createTemplate,

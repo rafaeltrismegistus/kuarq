@@ -1,0 +1,86 @@
+/* Barra de título (como num navegador): guias à esquerda, atalhos e janela à direita.
+   A barra de baixo (caminho e busca) continua como antes. */
+:root { --kq-titlebar: 42px; --kq-strip: color-mix(in srgb, var(--chrome), var(--text) 5%); }
+:root[data-theme="dark"] { --kq-strip: color-mix(in srgb, var(--chrome), #000 28%); }
+
+.kq-titlebar { position: sticky; top: 0; z-index: 30; display: flex; align-items: stretch; gap: 8px; height: var(--kq-titlebar); padding: 0 10px 0 8px; background: var(--kq-strip); user-select: none; }
+html.has-titlebar .shell { min-height: calc(100dvh - var(--kq-titlebar)); }
+html.has-titlebar .sidebar { top: var(--kq-titlebar); height: calc(100dvh - var(--kq-titlebar)); }
+html.has-titlebar #map-viewport { height: max(240px, calc(100dvh - 152px - var(--kq-titlebar))); }
+html:has(.shell.presenting) .kq-titlebar { display: none; }
+/* A faixa fica fixa no topo: ao focar o conteúdo, o navegador não rola para baixo dela. */
+html.has-titlebar { scroll-padding-top: var(--kq-titlebar); }
+html.has-titlebar #main { scroll-margin-top: calc(var(--kq-titlebar) + 54px); }
+
+/* Guias */
+.kq-tabs { display: flex; flex: 1; align-items: flex-end; gap: 1px; min-width: 0; padding-top: 7px; overflow: hidden; }
+.kq-tab { position: relative; display: flex; flex: 0 1 220px; align-items: center; gap: 7px; min-width: 70px; height: 35px; padding: 0 5px 0 12px; border-radius: 10px 10px 0 0; color: var(--muted); font-size: 12.5px; cursor: pointer; transition: background-color .12s, color .12s; }
+.kq-tab:hover { background: color-mix(in srgb, var(--chrome) 55%, transparent); color: var(--text); }
+.kq-tab:focus-visible { outline: 2px solid var(--focus); outline-offset: -2px; }
+.kq-tab[aria-selected="true"] { z-index: 1; background: var(--chrome); color: var(--text); font-weight: 600; }
+/* As "abas" curvas que ligam a guia ativa à barra de baixo, como no navegador. */
+.kq-tab[aria-selected="true"]::before, .kq-tab[aria-selected="true"]::after { content: ""; position: absolute; bottom: 0; width: 10px; height: 10px; pointer-events: none; }
+.kq-tab[aria-selected="true"]::before { left: -10px; background: radial-gradient(circle at 0 0, transparent 9.5px, var(--chrome) 10px); }
+.kq-tab[aria-selected="true"]::after { right: -10px; background: radial-gradient(circle at 100% 0, transparent 9.5px, var(--chrome) 10px); }
+.kq-tab:not([aria-selected="true"]) + .kq-tab:not([aria-selected="true"]) > .kq-tab-icon::before { content: ""; position: absolute; top: 10px; bottom: 10px; left: -1px; width: 1px; background: var(--line); }
+.kq-tab:hover > .kq-tab-icon::before, .kq-tab:hover + .kq-tab > .kq-tab-icon::before { opacity: 0; }
+.kq-tab-icon { display: grid; flex: none; place-items: center; width: 15px; height: 15px; }
+.kq-tab-icon svg { width: 14px; height: 14px; }
+.kq-tab[aria-selected="true"] .kq-tab-icon { color: var(--accent); }
+.kq-tab-title { flex: 1; min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.kq-tab-close { display: grid; flex: none; place-items: center; width: 20px; height: 20px; padding: 0; border: 0; border-radius: 6px; background: transparent; color: var(--muted); opacity: 0; transition: opacity .12s, background-color .12s; }
+.kq-tab-close svg { width: 12px; height: 12px; }
+.kq-tab:hover .kq-tab-close, .kq-tab[aria-selected="true"] .kq-tab-close, .kq-tab-close:focus-visible { opacity: 1; }
+.kq-tab-close:hover { background: var(--hover); color: var(--text); }
+.kq-tabs.is-single .kq-tab-close { display: none; }
+.kq-tab-new { display: grid; flex: none; place-items: center; width: 28px; height: 28px; margin: 0 0 4px 12px; padding: 0; border: 0; border-radius: 8px; background: transparent; color: var(--muted); }
+.kq-tab-new:hover { background: color-mix(in srgb, var(--chrome) 60%, transparent); color: var(--text); }
+.kq-tab-new svg { width: 15px; height: 15px; }
+
+/* Atalhos compactos: salvamento, modo discreto, recarregar e tema */
+.kq-titlebar-tools { display: flex; flex: none; align-items: center; gap: 2px; }
+.kq-titlebar-tools .icon-button { width: 30px; min-height: 30px; border-color: transparent; background: transparent; }
+.kq-titlebar-tools .icon-button:hover { border-color: transparent; background: color-mix(in srgb, var(--chrome) 70%, transparent); }
+.kq-titlebar-tools .icon-button svg { width: 15px; height: 15px; }
+.kq-titlebar-tools #save-status { margin-right: 6px; font-size: 11px; }
+
+/* Botões da janela (no app): as mesmas bolinhas da antiga barra de título. */
+.kq-window { display: flex; flex: none; align-items: center; gap: 2px; margin-left: 2px; padding-left: 10px; border-left: 1px solid var(--line); }
+.kq-titlebar .kq-window { align-self: center; height: 22px; }
+.kq-window-button { display: grid; place-items: center; width: 23px; height: 28px; padding: 0; border: 0; background: transparent; }
+.kq-window-button span { display: grid; place-items: center; width: 13px; height: 13px; border-radius: 50%; color: transparent; transition: color .12s, opacity .12s; }
+.kq-window-button svg { display: block; width: 9px; height: 9px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; }
+.kq-window-button[data-window="minimize"] span { background: #ffbd45; }
+.kq-window-button[data-window="maximize"] span { background: #35cb62; }
+.kq-window-button[data-window="close"] span { background: #ff625b; }
+.kq-window:hover .kq-window-button span, .kq-window-button:focus-visible span { color: #4a2525; }
+.kq-window-button:active span { opacity: .7; }
+
+@media (max-width: 760px) {
+  html.has-titlebar #map-viewport { height: max(230px, calc(100dvh - 188px - var(--kq-titlebar))); }
+  .kq-tab { flex-basis: 140px; min-width: 44px; padding-left: 9px; }
+  .kq-tab-title { display: none; }
+  .kq-tab[aria-selected="true"] .kq-tab-title { display: block; }
+  .kq-titlebar-tools #save-status { display: none; }
+}
+
+/* Status de salvamento: só aparece quando falha (vira o botão "Tentar de novo"). */
+.kq-titlebar-tools #save-status:disabled { display: none; }
+
+/* Segunda linha como barra de endereço: caminho à esquerda e busca no centro. */
+/* A primeira coluna nunca fica menor que o caminho (até 42% da largura): a busca cede espaço em vez de cortar o texto. */
+html.has-titlebar .topbar { display: grid; grid-template-columns: minmax(min-content, 1fr) minmax(200px, 340px) minmax(0, 1fr); column-gap: 16px; }
+html.has-titlebar .topbar > .breadcrumbs { max-width: 42vw; }
+html.has-titlebar .topbar > .breadcrumbs { grid-column: 1; }
+html.has-titlebar .topbar > .topbar-actions { grid-column: 2; justify-content: center; }
+html.has-titlebar .topbar .palette-trigger { width: 100%; min-width: 0; height: 34px; border-radius: 10px; }
+@media (max-width: 900px) {
+  html.has-titlebar .topbar { grid-template-columns: minmax(0, 1fr) auto; }
+  html.has-titlebar .topbar .palette-trigger { width: auto; }
+}
+
+/* Bolinha da visão app: mesma forma das outras, na cor de destaque do tema (cinza roxeado no claro, off-white no escuro). */
+.kq-window-button[data-window="app"] { margin-right: 2px; }
+.kq-window-button[data-window="app"] span { background: var(--accent); }
+.kq-window:hover .kq-window-button[data-window="app"] span, .kq-window-button[data-window="app"]:focus-visible span { color: var(--page, var(--chrome)); }
+.kq-window-button[data-window="app"][aria-pressed="true"] span { box-shadow: 0 0 0 2px var(--kq-strip), 0 0 0 3.5px var(--accent); }

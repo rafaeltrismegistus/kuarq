@@ -1221,6 +1221,7 @@ const tasks = (() => {
     all, find, create, toggle, remove, statusNames, columns, card, statusBadge, dueBadge, code, isLate, priorities,
     open: (id) => panel(id),
     openPage,
+    current: () => pageId ?? (drawer.open && drawer.dataset.panel === "task" ? panelId : undefined),
     edit: (id) => (id ? panel(id) : newTask()),
     newTask,
     showView: (name) => {

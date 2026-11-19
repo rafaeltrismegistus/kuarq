@@ -23,7 +23,7 @@ body:
     id: version
     attributes:
       label: Versão do Kuarq
-      placeholder: v1.0.0
+      placeholder: v2.0.0
   - type: input
     id: windows
     attributes:

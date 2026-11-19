@@ -128,7 +128,7 @@ const ui = (() => {
   }
 
   /* Text inputs with suggestions (replaces native <datalist> popups). */
-  const fold = (text) => text.normalize("NFD").replace(/\p{M}/gu, "").toLowerCase();
+  const fold = (text) => kit.fold(text);
   let suggest;
 
   function closeSuggest() {

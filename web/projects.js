@@ -746,6 +746,7 @@ const projects = (() => {
       kit.open("projects");
     },
     all, statuses, stages, healths, summary, pace,
+    current: () => openId,
   };
   kit.register("projects", "Projetos", module);
   return module;

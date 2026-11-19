@@ -4,7 +4,7 @@ const palette = (() => {
   const dialog = $("#palette");
   const input = $("#palette-input");
   const list = $("#palette-results");
-  const fold = (text = "") => text.normalize("NFD").replace(/\p{M}/gu, "").toLowerCase();
+  const { fold } = kit;
   const node = (tag, className, text = "") => Object.assign(document.createElement(tag), { className, textContent: text });
   const edited = new Intl.DateTimeFormat("pt-BR", { day: "numeric", month: "short" });
   let results = [];
@@ -52,6 +52,7 @@ const palette = (() => {
         { title: "Novo cartão de crédito", detail: "Fatura e limite", glyph: "card", keywords: "nucleo cartao", run: () => nucleus.create("card") },
       ] : []),
       { title: "Quadro dos sonhos", detail: "Galeria dos seus sonhos", glyph: "sparkle", keywords: "sonhos metas objetivos vision board", run: go("dreams") },
+      { title: "Cérebro", detail: "Grafo das notas e dos links entre elas", glyph: "branch", keywords: "grafo obsidian conexoes ligacoes rede mapa", run: go("brain") },
       { title: "Novo sonho", detail: "Adicionar ao quadro dos sonhos", glyph: "plus", keywords: "sonho meta objetivo criar", run: () => dreams.newDream() },
       { title: "Recolher ou abrir a barra lateral", detail: "Mais espaço na tela", glyph: "sidebar", keywords: "menu lateral sidebar foco", run: () => document.querySelector('[data-action="sidebar"]')?.click() },
       { title: "Hoje", detail: "Ir para a página inicial", glyph: "home", keywords: "inicio painel home", run: go("today") },

@@ -16,9 +16,10 @@ const richText = (() => {
     ["ol", "Lista numerada", "Lista com sequência numérica", "ordered", "lista numerada numero ordenada"],
     ["blockquote", "Citação", "Destaque uma frase ou trecho", "quote", "citacao quote destaque"],
     ["hr", "Divisor", "Linha para separar seções", "divider", "divisor linha separador hr"],
+    ["note", "Link para nota", "Liga a outra nota (aparece no Cérebro)", "link", "link nota pagina referencia cerebro conexao ligar"],
   ];
   const shortcuts = { "-": "ul", "*": "ul", "1.": "ol", "[]": "check", "[ ]": "check", "#": "h1", "##": "h2", "###": "h3", ">": "blockquote" };
-  const fold = (text) => text.normalize("NFD").replace(/\p{M}/gu, "").toLowerCase();
+  const fold = (text) => kit.fold(text);
   const node = (tag, className, text) => Object.assign(document.createElement(tag), { className, textContent: text });
   const exec = (command, value) => document.execCommand(command, false, value);
   let instances = 0;
@@ -92,8 +93,12 @@ const richText = (() => {
           !discarded.has(child.localName)) {
         let target = allowed.has(child.localName) ? document.createElement(child.localName) : parent;
         if (child.localName === "a") {
+          const noteId = child.getAttribute("data-note");
           const href = safeHref(child.getAttribute("href"));
-          if (href) target.setAttribute("href", href);
+          if (noteId && /^[\w-]{1,80}$/.test(noteId)) {
+            target.dataset.note = noteId;
+            target.className = "note-ref";
+          } else if (href) target.setAttribute("href", href);
           else target = parent;
         }
         if (target !== parent) {
@@ -138,7 +143,7 @@ const richText = (() => {
       ${tool("data-block", "blockquote", "Citação", "Citação", icon("quote"))}`;
   }
 
-  function editor(body, { onEdit = () => {} } = {}) {
+  function editor(body, { onEdit = () => {}, notes, openNote } = {}) {
     const uid = `rich-${++instances}`;
     const host = body.closest("dialog") ?? document.body;
     const bubble = node("div", "note-bubble", "");
@@ -452,7 +457,7 @@ const richText = (() => {
 
     function anchorAt(range) {
       if (!range) return null;
-      return within(range.startContainer, "a") ?? (range.collapsed ? null : within(range.endContainer, "a"));
+      return within(range.startContainer, "a[href]") ?? (range.collapsed ? null : within(range.endContainer, "a[href]"));
     }
 
     function placeLinkPop(rect) {
@@ -581,6 +586,12 @@ const richText = (() => {
     }
 
     body.addEventListener("click", (event) => {
+      const ref = event.target.closest?.("a[data-note]");
+      if (ref && body.contains(ref)) {
+        event.preventDefault();
+        openNote?.(ref.dataset.note);
+        return;
+      }
       const anchor = event.target.closest?.("a[href]");
       if (!anchor || !body.contains(anchor)) return;
       event.preventDefault();
@@ -604,7 +615,7 @@ const richText = (() => {
 
     function renderSlash() {
       const query = fold(slashState.query);
-      const matches = slashItems.filter(([, name, , , keywords]) => fold(`${name} ${keywords}`).includes(query));
+      const matches = slashItems.filter(([type, name, , , keywords]) => (type !== "note" || notes) && fold(`${name} ${keywords}`).includes(query));
       slashState.matches = matches;
       slashState.index = Math.min(slashState.index, Math.max(0, matches.length - 1));
       slash.replaceChildren();
@@ -672,10 +683,100 @@ const richText = (() => {
       selection.removeAllRanges();
       selection.addRange(removal);
       exec("delete");
+      if (type === "note") return openNotePicker();
       applyBlock(type);
     }
 
-    slash.addEventListener("mousedown", (event) => event.preventDefault());
+    /* Busca de notas dentro do menu: escolha uma e o link entra no texto. */
+    let picking;
+    function placeMenu(range) {
+      const caret = range.getClientRects()[0] ?? elementOf(range.startContainer).getBoundingClientRect();
+      const left = Math.max(10, Math.min(caret.left - 10, innerWidth - slash.offsetWidth - 10));
+      let top = caret.bottom + 6;
+      if (top + slash.offsetHeight > innerHeight - 10) top = Math.max(10, caret.top - slash.offsetHeight - 6);
+      slash.style.left = `${left}px`;
+      slash.style.top = `${top}px`;
+    }
+    function closePicker(refocus) {
+      if (!picking) return;
+      const { range } = picking;
+      picking = undefined;
+      slash.hidden = true;
+      if (refocus) {
+        body.focus();
+        const selection = window.getSelection();
+        selection.removeAllRanges();
+        selection.addRange(range);
+      }
+    }
+    function insertNoteRef(item) {
+      const { range } = picking;
+      closePicker(false);
+      body.focus();
+      const selection = window.getSelection();
+      selection.removeAllRanges();
+      selection.addRange(range);
+      const label = document.createElement("span");
+      label.textContent = item.title || "Sem título";
+      exec("insertHTML", `<a data-note="${item.id}" class="note-ref">${label.innerHTML}</a>&nbsp;`);
+      updateNote();
+    }
+    function openNotePicker() {
+      const range = selectionRange();
+      if (!range || !notes) return;
+      picking = { range: range.cloneRange() };
+      const input = node("input", "slash-search", "");
+      input.type = "search";
+      input.placeholder = "Buscar nota…";
+      input.setAttribute("aria-label", "Buscar nota para ligar");
+      const list = node("div", "slash-list", "");
+      slash.replaceChildren(node("p", "slash-heading", "Link para nota"), input, list);
+      let matches = [];
+      let index = 0;
+      const paint = () => {
+        const query = fold(input.value.trim());
+        matches = notes().filter((item) => fold(item.title || "Sem título").includes(query)).slice(0, 40);
+        index = Math.min(index, Math.max(0, matches.length - 1));
+        list.replaceChildren(...(matches.length ? matches.map((item, position) => {
+          const option = node("button", "slash-option", "");
+          option.type = "button";
+          option.dataset.pick = String(position);
+          option.setAttribute("aria-selected", String(position === index));
+          const mark = node("span", "slash-icon", "");
+          mark.innerHTML = icon("note");
+          const text = node("span", "slash-text", "");
+          text.append(node("strong", "", item.title || "Sem título"), node("small", "", item.detail ?? ""));
+          option.append(mark, text);
+          return option;
+        }) : [node("p", "slash-empty", "Nenhuma nota encontrada")]));
+        list.querySelector('[aria-selected="true"]')?.scrollIntoView({ block: "nearest" });
+      };
+      input.addEventListener("input", () => { index = 0; paint(); });
+      input.addEventListener("keydown", (event) => {
+        if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+          event.preventDefault();
+          if (matches.length) index = (index + (event.key === "ArrowDown" ? 1 : -1) + matches.length) % matches.length;
+          paint();
+        } else if (event.key === "Enter") {
+          event.preventDefault();
+          if (matches[index]) insertNoteRef(matches[index]);
+        } else if (event.key === "Escape") {
+          event.preventDefault();
+          closePicker(true);
+        }
+      });
+      list.addEventListener("click", (event) => {
+        const option = event.target.closest("[data-pick]");
+        if (option) insertNoteRef(matches[Number(option.dataset.pick)]);
+      });
+      paint();
+      slash.hidden = false;
+      placeMenu(range);
+      input.focus();
+    }
+    document.addEventListener("mousedown", (event) => { if (picking && !slash.contains(event.target)) closePicker(false); });
+
+    slash.addEventListener("mousedown", (event) => { if (!event.target.closest("input")) event.preventDefault(); });
     slash.addEventListener("click", (event) => {
       const option = event.target.closest(".slash-option");
       if (option) chooseSlash(option.dataset.type);
@@ -825,7 +926,7 @@ const richText = (() => {
     body.addEventListener("drop", (event) => event.preventDefault());
     body.addEventListener("focus", prepare);
     body.addEventListener("blur", () => {
-      closeSlash();
+      if (!picking) closeSlash();
       setTimeout(() => {
         if (!bubble.contains(document.activeElement) && document.activeElement !== body) hideBubble();
       });
@@ -838,7 +939,9 @@ const richText = (() => {
       closeSlash();
       queueBubble();
     });
-    document.addEventListener("scroll", () => {
+    document.addEventListener("scroll", (event) => {
+      if (event.target instanceof Node && (slash.contains(event.target) || bubble.contains(event.target) || linkPop.contains(event.target))) return;
+      if (picking) closePicker(false);
       closeSlash();
       if (linkState?.mode === "view") hideLinkPop();
       if (!bubble.hidden) queueBubble();

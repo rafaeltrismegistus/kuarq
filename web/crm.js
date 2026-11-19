@@ -41,7 +41,7 @@ const crm = (() => {
 
   const escape = (value = "") => String(value).replace(/[&<>"']/g,
     (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char]);
-  const fold = (value) => value.normalize("NFD").replace(/\p{M}/gu, "").toLowerCase();
+  const fold = (value) => kit.fold(value);
   const pad = (value) => String(value).padStart(2, "0");
   const localDay = (date = new Date()) => `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
   const dayNumber = (date) => Date.parse(`${date}T00:00:00Z`) / dayMs;

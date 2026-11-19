@@ -4,7 +4,7 @@ Obrigado pelo interesse! Este guia mostra como propor mudanças sem quebrar o qu
 
 ## Antes de começar
 
-- Leia a [arquitetura](docs/ARQUITETURA.md) e o [guia dos módulos](docs/MODULOS.md).
+- Leia a [arquitetura](docs/ARQUITETURA.md), o [guia dos módulos](docs/MODULOS.md) e as [diretrizes de engenharia](.ai/README.md).
 - Para mudanças grandes, abra uma issue antes para alinhar a ideia.
 
 ## Ambiente

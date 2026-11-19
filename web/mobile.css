@@ -1,0 +1,113 @@
+/* Visão mobile (estilo app): menu embaixo, barra do topo enxuta, toques maiores e gavetas em tela cheia.
+   Só entra em telas estreitas; o prefixo ":root" garante prioridade sobre os estilos dos módulos carregados depois. */
+@media (max-width: 720px) {
+  html { -webkit-tap-highlight-color: transparent; }
+  :root body { overscroll-behavior-y: none; }
+
+  /* ---------- Menu principal vira barra de abas embaixo ---------- */
+  :root .shell, :root .shell.collapsed { display: block; min-height: 0; }
+  :root .sidebar, :root .collapsed .sidebar, :root.has-titlebar .sidebar {
+    top: auto;
+    position: fixed; inset: auto 0 0; z-index: 40; height: auto; flex-direction: row;
+    padding: 6px 8px calc(6px + env(safe-area-inset-bottom));
+    border-right: 0; border-top: 1px solid var(--line);
+    background: color-mix(in srgb, var(--chrome) 94%, transparent); backdrop-filter: blur(16px);
+  }
+  :root .sidebar :is(.brand-row, .sidebar-footer, .nav-section) { display: none; }
+  :root .tool-navigation { display: grid; grid-auto-columns: minmax(0, 1fr); grid-auto-flow: column; gap: 2px; width: 100%; }
+  :root .sidebar .nav-tool, :root .collapsed .sidebar .nav-tool {
+    flex-direction: column; justify-content: center; gap: 3px; min-height: 52px; padding: 5px 2px;
+    border: 0; border-radius: 12px; background: transparent; font-size: 10.5px; font-weight: 550; text-align: center;
+  }
+  :root .collapsed .sidebar .nav-tool > span:last-child { display: block; }
+  :root .sidebar .nav-tool > span:last-child { max-width: 100%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+  :root .sidebar .nav-tool > span:first-child { display: grid; place-items: center; width: 46px; height: 28px; border-radius: 999px; transition: background-color .15s; }
+  :root .sidebar .nav-tool svg { width: 19px; height: 19px; }
+  :root .sidebar .nav-tool:hover { background: transparent; }
+  :root .sidebar .nav-tool[aria-current="true"] { background: transparent; color: var(--accent); }
+  :root .sidebar .nav-tool[aria-current="true"] > span:first-child { background: var(--soft); }
+
+  /* ---------- Topo: guias compactas e caminho com busca ---------- */
+  :root .kq-titlebar { padding: 0 6px 0 4px; }
+  :root .kq-titlebar-tools .icon-button { width: 36px; min-height: 36px; }
+  :root .topbar, :root.has-titlebar .topbar {
+    position: sticky; top: var(--kq-titlebar, 0px); z-index: 25; display: flex; height: 48px; padding: 0 8px 0 16px;
+    background: color-mix(in srgb, var(--chrome) 94%, transparent); backdrop-filter: blur(16px);
+  }
+  :root:not(.has-titlebar) .topbar { top: 0; }
+  :root .topbar > .breadcrumbs, :root.has-titlebar .topbar > .breadcrumbs { flex: 1; max-width: none; font-size: 13px; }
+  :root .breadcrumbs #tool-crumb { overflow: hidden; text-overflow: ellipsis; }
+  :root .topbar .palette-trigger, :root.has-titlebar .topbar .palette-trigger { width: 40px; height: 40px; padding: 0; justify-content: center; border-color: transparent; background: transparent; }
+  :root .topbar .palette-trigger > span:not(:first-child), :root .topbar .palette-trigger kbd { display: none; }
+  :root .topbar .palette-trigger svg { width: 18px; height: 18px; }
+
+  /* ---------- Conteúdo: margens de app e espaço para o menu de baixo ---------- */
+  :root main { padding: 16px 16px calc(84px + env(safe-area-inset-bottom)); }
+  :root .page-heading { flex-wrap: wrap; align-items: flex-end; gap: 12px; margin-bottom: 14px; }
+  :root .page-heading > div:first-child { flex: 1 1 100%; min-width: 0; }
+  :root .page-heading h1 { font-size: 25px; }
+  :root .page-heading p { font-size: 13px; }
+  :root .page-heading > :not(:first-child) { display: flex; flex-wrap: wrap; gap: 8px; }
+
+  /* Toques confortáveis em botões e campos (16px nos campos evita o zoom automático do celular). */
+  :root .button { min-height: 40px; padding: 0 14px; border-radius: 10px; }
+  :root .icon-button { width: 40px; min-height: 40px; border-radius: 10px; }
+  :root :is(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]), textarea, [contenteditable="true"]) { font-size: 16px; }
+
+  /* Abas de seção (Notas, Mapas, CRM…) rolam de lado, sem quebrar. */
+  :root :is(.crm-tabs, .group-tabs) { flex-wrap: nowrap; margin-inline: -16px; padding-inline: 10px; overflow-x: auto; scrollbar-width: none; scroll-snap-type: x proximity; }
+  :root :is(.crm-tabs, .group-tabs) > button { scroll-snap-align: start; min-height: 44px; }
+
+  /* Barras de ferramentas e filtros: ocupam a largura e rolam de lado quando não cabem. */
+  :root :is(.tk-toolbar, .crm-toolbar, .brain-toolbar) { flex-wrap: wrap; gap: 8px; }
+  :root :is(.tk-search, .crm-search) { flex: 1 1 100%; width: 100%; max-width: none; }
+  :root :is(.crm-filters, .tk-filters) { flex-wrap: nowrap; margin-inline: -16px; padding-inline: 16px; overflow-x: auto; scrollbar-width: none; }
+
+  /* Listas de contatos (Hoje e Networking): nome e ação em cima; quando e situação embaixo. */
+  :root .crm-rows > li { flex-wrap: wrap; row-gap: 6px; padding: 10px 14px; }
+  :root .crm-rows > li > .crm-person { flex: 1 1 0; order: 0; min-width: 0; }
+  :root .crm-rows > li > :is(.button, .icon-button) { order: 1; }
+  :root .crm-rows > li:has(> .crm-queue-when)::after { content: ""; order: 2; flex-basis: 100%; height: 0; }
+  :root .crm-rows > li > :not(.crm-person, .button, .icon-button) { order: 3; }
+  :root .crm-rows > li > .crm-queue-when { margin-left: 42px; }
+
+  /* Tarefas (Hoje e listas): título inteiro na primeira linha; situação, projeto e prazo embaixo. */
+  :root .task-row { flex-wrap: wrap; row-gap: 6px; padding: 10px 14px; }
+  :root .task-row > :is(.task-check, .task-title) { order: 0; }
+  :root .task-row > .task-title { flex: 1 1 0; font-size: 14px; }
+  :root .task-row:has(> .task-row-meta)::after { content: ""; order: 1; flex-basis: 100%; height: 0; }
+  :root .task-row > :not(.task-check, .task-title) { order: 2; }
+  :root .task-row > :nth-child(3) { margin-left: 28px; }
+  :root .task-row-meta { justify-content: flex-start; }
+
+  /* Tabelas largas rolam dentro do próprio cartão. */
+  :root :is(.table-wrap, .crm-table-wrap, .tk-table-wrap) { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+  /* ---------- Gavetas e janelas: tela cheia, como telas de app ---------- */
+  :root dialog.drawer { inset: 0; width: 100%; max-width: none; height: 100dvh; max-height: none; margin: 0; border: 0; border-radius: 0; }
+  :root .drawer .dialog-header { padding: 12px 16px; padding-top: calc(12px + env(safe-area-inset-top)); }
+  :root .drawer-fields { padding: 16px !important; }
+  :root .drawer .dialog-footer { padding: 10px 16px calc(10px + env(safe-area-inset-bottom)); }
+  :root dialog:not(.drawer)[open] { width: calc(100% - 20px); max-width: none; max-height: calc(100dvh - 24px); margin: auto auto 10px; border-radius: 18px; }
+  :root .dialog-footer { flex-wrap: wrap; }
+  :root .dialog-footer .button { flex: 1 1 auto; }
+
+  /* Menus suspensos e o "/" das notas não passam da borda da tela. */
+  :root :is(.kit-menu, .note-slash) { max-width: calc(100vw - 20px); }
+
+  /* ---------- Cérebro ---------- */
+  :root :is(.brain-hint, .brain-toolbar .tk-spacer) { display: none; }
+  :root .brain-search { flex: 1 1 auto; width: auto; }
+  :root .brain-stage { height: calc(100dvh - var(--kq-titlebar, 0px) - 330px - env(safe-area-inset-bottom)); min-height: 340px; margin-inline: -16px; border-inline: 0; border-radius: 0; }
+  :root .brain-card { inset: auto 8px 8px; width: auto; max-height: 64%; gap: 8px; border-radius: 16px; }
+  :root .brain-card-lists { min-height: 96px; }
+
+  /* ---------- Mapa mental ---------- */
+  :root #map-viewport, :root.has-titlebar #map-viewport { height: calc(100dvh - var(--kq-titlebar, 0px) - 48px - 150px - env(safe-area-inset-bottom)); }
+}
+
+/* Telas bem estreitas: rótulos do menu de baixo menores. */
+@media (max-width: 380px) {
+  :root .sidebar .nav-tool { font-size: 9.5px; }
+  :root .sidebar .nav-tool > span:first-child { width: 40px; }
+}

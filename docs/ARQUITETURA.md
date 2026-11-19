@@ -20,7 +20,7 @@ O Kuarq tem duas partes: um **app nativo pequeno** e uma **interface web local**
 
 ## App nativo (`desktop/`)
 
-- `MainWindow.xaml.cs` cria o WebView2, mapeia `web/` para `https://toolkit.localhost` e recebe as mensagens da interface. As ações são `load`, `save`, `backup-list`, `backup-create`, `backup-read`, `backup-restore`, `backup-folder`, `open-link` (http, https, mailto ou caminho local), `pick-file`, `pick-folder` e `theme`. Mensagens de outra origem são ignoradas.
+- `MainWindow.xaml.cs` cria o WebView2, mapeia `web/` para `https://toolkit.localhost` e recebe as mensagens da interface. As ações são `load`, `save`, `backup-list`, `backup-create`, `backup-read`, `backup-restore`, `backup-folder`, `open-link` (http, https, mailto ou caminho local), `pick-file`, `pick-folder`, `theme`, `ui-get` e `ui-set` (guias abertas, em `ui.json`), `save-pdf` e os comandos da janela (`minimize`, `maximize`, `close`, `app`, `drag`). Mensagens de outra origem são ignoradas.
 - `WorkspaceStore.cs` grava em um arquivo temporário e troca de forma atômica, mantendo a versão anterior em `.bak`. O limite do arquivo é de 64 MB.
 - `BackupStore.cs` guarda os backups compactados e faz a limpeza por tipo: 30 diários, 20 manuais e 10 de segurança.
 - `App.xaml.cs` garante uma única instância.

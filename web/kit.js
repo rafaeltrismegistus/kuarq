@@ -424,7 +424,6 @@ const kit = (() => {
     const searchInput = element.querySelector(".kit-menu-search");
     (searchInput ?? element.querySelector(".kit-menu-item:not(:disabled)"))?.focus({ preventScroll: true });
     if (searchInput) {
-      const fold = (text) => text.normalize("NFD").replace(/\p{M}/gu, "").toLowerCase();
       if (!element.querySelector(".kit-menu-empty")) element.insertAdjacentHTML("beforeend", '<span class="kit-menu-empty" hidden>Nada encontrado</span>');
       searchInput.addEventListener("input", () => {
         const query = fold(searchInput.value.trim());

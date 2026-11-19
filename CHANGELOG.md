@@ -2,6 +2,20 @@
 
 Todas as mudanças relevantes do Kuarq. O formato segue [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/) e o versionamento segue [SemVer](https://semver.org/lang/pt-BR/).
 
+## [2.0.0] - 2026-11-19
+
+### Novidades
+- **Guias** como num navegador: várias telas abertas, com Ctrl+T, Ctrl+W, Ctrl+Tab, Ctrl+1…9, Ctrl+Shift+T e Ctrl+clique. As guias são lembradas entre sessões.
+- **Barra de título própria**, com guias, busca centralizada e botões da janela no topo.
+- **Cérebro**: grafo interativo das notas, ligado pelos links entre elas.
+- **Notas**: link para outra nota pelo `/` e salvamento automático 3 s após a última tecla.
+- **Visão app**: botão ao lado de minimizar que deixa a janela estreita e sempre à frente; volta ao tamanho anterior ao sair.
+- **Visão mobile** em telas de até 720 px.
+
+### Mudanças
+- O status de salvamento só aparece quando falha.
+- Busca sem acento unificada no `kit`.
+
 ## [1.0.0] - 2026-11-17
 
 Primeira versão pública.
@@ -19,4 +33,5 @@ Primeira versão pública.
 - Nova instalação começa vazia. A pasta de dados é `%LOCALAPPDATA%\Kuarq`, e instalações antigas em `Toolkit` continuam funcionando.
 - O limite do arquivo de dados subiu para 64 MB para acomodar imagens.
 
+[2.0.0]: https://github.com/rafaeltrismegistus/kuarq/releases/tag/v2.0.0
 [1.0.0]: https://github.com/rafaeltrismegistus/kuarq/releases/tag/v1.0.0
